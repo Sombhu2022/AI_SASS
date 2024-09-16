@@ -2,9 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+@import '../style/header.css';
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
+}
+a:hover , a:active{
+  color: #ededed;
 }
 
 @media (prefers-color-scheme: dark) {
