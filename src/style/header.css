@@ -1,0 +1,47 @@
+/* layout.css */
+
+/* Tailwind base and utilities */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Top bar design for mobile */
+.header {
+  @apply flex justify-around items-center p-4 bg-gray-800 text-white shadow-md ;
+}
+
+.header h1 {
+  @apply font-bold text-xl;
+}
+
+/* Navigation links styling */
+.header nav {
+  @apply  space-x-4;
+}
+
+.header nav a {
+  @apply rounded-xl px-5 pl-2 py-2 ;
+}
+
+/* For laptop/desktop, make it a sidebar */
+@media (min-width: 768px) {
+  .header {
+    @apply fixed top-0 left-0 h-full w-64 flex flex-col justify-start shadow-lg;
+  }
+
+  /* Adjust the h1 for sidebar */
+  .header h1 {
+    @apply text-2xl py-4 px-6;
+  }
+
+  .header nav {
+    @apply flex flex-col justify-center items-baseline mt-8 space-y-4 px-6;
+  }
+
+  
+
+  /* Shift the main content to the right to make space for sidebar */
+  .main-content {
+    @apply ml-64 p-6;
+  }
+}
