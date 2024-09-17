@@ -7,7 +7,7 @@
 
 /* Top bar design for mobile */
 .header {
-  @apply flex justify-around items-center p-4 bg-gray-800 text-white shadow-md ;
+  @apply flex flex-col justify-around items-center p-4 bg-gray-800 text-white shadow-md ;
 }
 
 .header h1 {
@@ -16,7 +16,7 @@
 
 /* Navigation links styling */
 .header nav {
-  @apply  space-x-4;
+  @apply  space-x-4 mt-10 ;
 }
 
 .header nav a {
@@ -35,7 +35,7 @@
   }
 
   .header nav {
-    @apply flex flex-col justify-center items-baseline mt-8 space-y-4 px-6;
+    @apply flex flex-col mt-0 h-auto justify-center items-baseline mt-8 space-y-4 px-6;
   }
 
   

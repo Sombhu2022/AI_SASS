@@ -10,6 +10,9 @@ import { IoSettingsSharp } from "react-icons/io5";
 import { FaVideo } from "react-icons/fa";
 import { FaCode } from "react-icons/fa6";
 import { RiRobot3Line } from "react-icons/ri";
+import { RxHamburgerMenu } from "react-icons/rx";
+import { IoMdClose } from "react-icons/io";
+
 import { useState } from "react";
 
 
@@ -21,7 +24,7 @@ function Header() {
       icon: <MdSpaceDashboard />,
       iconColor: "text-purple-600",
       iconbg: "bg-purple-600/10",
-      link: "/convertion",
+      link: "/dashboard",
     },
     {
       name: "Convertion",
@@ -35,21 +38,21 @@ function Header() {
       icon: <FaImage />,
       iconColor: "text-amber-600",
       iconbg: "bg-amber-600/10",
-      link: "/image-genaretor",
+      link: "/image",
     },
     {
       name: "Code Generation",
       icon: <FaCode />,
       iconColor: "text-green-600",
       iconbg: "bg-green-600/10",
-      link: "/code-genaretor",
+      link: "/code",
     },
     {
       name: "Video Generation",
       icon: <FaVideo />,
       iconColor: "text-pink-500",
       iconbg: "bg-pink-600/10",
-      link: "/video-genaretor",
+      link: "/video",
     },
     {
       name: "Setting",
@@ -64,13 +67,17 @@ function Header() {
 
   return (
     <header className="header">
-    <h1 className="flex gap-3 items-center ">
+
+      <div className='flex justify-between w-full'>
+
+      <h1 className="flex gap-3 items-center ">
       <RiRobot3Line className="text-pink-600 text-3xl rounded-md" /> 
       <span> AI_SAAS </span>
     </h1>
 
-    
-    {/* Mobile Authentication Section */}
+     <div className='flex justify-between gap-5' >
+
+     {/* Mobile Authentication Section */}
     <div className="md:hidden flex items-center gap-2">
       <SignedOut>
         <SignInButton className="py-1 px-3 border rounded-lg text-gray-800 bg-gray-200" />
@@ -86,9 +93,20 @@ function Header() {
         onClick={() => setIsOpen(!isOpen)}
         className="text-white focus:outline-none"
       >
-        ☰
+        {
+          isOpen? <IoMdClose/>:<RxHamburgerMenu/>
+        }
+        
+        
       </button>
     </div>
+
+     </div>
+
+  
+      
+      </div>
+    
 
     {/* Sidebar for larger screens */}
     <nav
@@ -101,6 +119,7 @@ function Header() {
           href={ele.link}
           key={index}
           className="flex gap-2 items-center p-2 text-gray-400 hover:bg-slate-500/10 hover:text-white"
+        
         >
           <b className={`${ele.iconbg} ${ele.iconColor} p-2 rounded-md`}> {ele.icon} </b>
           <span > {ele.name} </span>
