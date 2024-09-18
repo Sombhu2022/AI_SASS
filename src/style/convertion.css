@@ -1,0 +1,21 @@
+
+
+.res-msg-sec{
+    @apply border border-gray-500 p-5 w-full max-w-4xl  rounded-md shadow-md mb-8
+}
+
+.conversion-section{
+    @apply p-6 md:p-10 min-h-screen flex flex-col items-center
+}
+.heading-section{
+    @apply border border-gray-500 shadow-md rounded-md flex flex-col md:flex-row items-center gap-3 p-5 mb-8 w-full max-w-4xl
+}
+
+@media (max-width: 512px) {
+   
+    .conversion-section{
+        @apply p-0 
+    }
+
+   
+}

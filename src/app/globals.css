@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 @import '../style/header.css';
+@import '../style/convertion.css';
 
 :root {
   --background: #ffffff;
