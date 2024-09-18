@@ -1,34 +1,34 @@
-
-import { auth } from '@clerk/nextjs';
+import { auth } from '@clerk/nextjs/server';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import { NextResponse } from 'next/server';
-import { Configuration, OpenAIApi } from 'openai';
+// import OpenAI from "openai";
 
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY, // Make sure you add your API key in the .env.local file
-});
+// const openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY}, );
 
-const openai = new OpenAIApi(configuration);
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
 
-export default POST =async(req )=> {
+export const POST = async (req) => {
+  const { userId } =  auth(); // Ensure auth() resolves
+  const {prompt} = await req.json();
+  console.log(userId, prompt);
+
+  if (!userId) {
+    return new NextResponse("User not authenticated", { status: 400 });
+  }
+  if(!prompt) return new NextResponse("please input valid propt " , {status:400})
+
+  try {
+    // const image = await openai.images.generate({ model:"dall-e-2", prompt: "A cute baby sea otter" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash"});
+    const result = await model.generateContent(prompt);
+ console.log(result);
  
-    const { userId} =  auth()
-    const { message:prompt } =await req.json();
-    if(!userId){
-        return new NextResponse("user not authenticate" , {status:400})
+    // Return the completion as JSON
+    return NextResponse.json({ message: "Message generated successfully" , data: result.response.candidates[0].content.parts[0].text });
+  } catch (error) {
+    console.error(error);
 
-    }
-
-    try {
-      const response = await openai.createCompletion({
-        model: 'gpt-3.5-turbo', // You can use other models like 'gpt-3.5-turbo' based on your needs
-        prompt: prompt,
-        
-      });
-
-      return new NextResponse("message genarate successfull" , {status:200} , response)
-    } catch (error) {
-      console.error(error);
-      return new NextResponse("message genarate successfull" , {status:200} , error)
-    }
-  
-}
+    // Return the error as JSON
+    return NextResponse.json({ message: "Error generating message", error }, { status: 500 });
+  }
+};
