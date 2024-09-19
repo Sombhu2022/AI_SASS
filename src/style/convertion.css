@@ -5,7 +5,7 @@
 }
 
 .conversion-section{
-    @apply p-6 md:p-10 min-h-screen flex flex-col items-center
+    @apply p-6  md:p-10 min-h-screen flex flex-col items-center
 }
 .heading-section{
     @apply border border-gray-500 shadow-md rounded-md flex flex-col md:flex-row items-center gap-3 p-5 mb-8 w-full max-w-4xl
@@ -16,6 +16,19 @@
     .conversion-section{
         @apply p-0 
     }
+    .heading-section{
+        @apply flex flex-row p-2
+    }
+    
+    .heading-section div{
+        @apply items-start
+    }
 
+    .heading-section div h1{
+        @apply line-clamp-1
+    }
+    .heading-section div p{
+        @apply text-left line-clamp-2
+    }
    
 }
