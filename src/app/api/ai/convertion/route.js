@@ -21,7 +21,7 @@ export const POST = async (req) => {
     // const image = await openai.images.generate({ model:"dall-e-2", prompt: "A cute baby sea otter" });
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash"});
     const result = await model.generateContent(prompt);
- console.log(result);
+    console.log(result);
  
     // Return the completion as JSON
     return NextResponse.json({ message: "Message generated successfully" , data: result.response.candidates[0].content.parts[0].text });

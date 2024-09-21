@@ -1,29 +1,34 @@
 "use client";
 import MarkDownTextFormater from "@/components/MarkDownTextFormater";
+import MyEditor from "@/components/MyEditor";
 import axios from "axios";
 import React, { useState } from "react";
-import { LuMessageSquare } from "react-icons/lu";
+
+import HeadingSection from "./_components/HeadingSection";
+import ContentType from "./_components/ContentType";
+
+import { contentTypeData } from '@/data/convertionContentType'
+
 
 function Page() {
   const [prompt, setPrompt] = useState("");
   const [messages, setMessages] = useState([]); // Initial empty array
 
-
   const handleGeneratePDF = async (aiResponse) => {
     try {
       // Make an API call to create the PDF
-      const  data  = await axios.post("/api/pdf/react-pdf", { content: aiResponse });
-  
-      console.log("log data",data);
-      
+      const data = await axios.post("/api/pdf/react-pdf", {
+        content: aiResponse,
+      });
+
+      console.log("log data", data);
+
       // Redirect to the new page for PDF download/edit
       window.location.href = `pdf/edit-pdf?file=${data.data.fileUrl}`;
     } catch (error) {
       console.error("Error generating PDF:", error);
     }
   };
-  
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -45,23 +50,26 @@ function Page() {
 
   return (
     <section className=" conversion-section">
-      {/* AI Assistant Section */}
-      <div className=" heading-section ">
-        <LuMessageSquare className="text-blue-600 bg-blue-600/15 rounded-lg p-5 text-7xl" />
-        <div className="flex flex-col gap-3 text-center md:text-left">
-          <h1 className="text-xl md:text-2xl font-semibold text-gray-200">
-            Discuss Your Idea with AI
-          </h1>
-          <p className="text-gray-600">
-            This is your AI assistant to help you improve your project ideas...
-          </p>
-        </div>
-      </div>
+      
+      <HeadingSection/>
+
+      <div className='flex flex-wrap justify-center items-center  gap-4'>
+      {
+        contentTypeData && contentTypeData.map((item , index)=>{
+           return(
+             <ContentType contentData = {item} key={index}/>
+
+           )
+        })
+
+      }
+    </div>
+
 
       {/* Message Section */}
       <div className="res-msg-sec border">
         <h2 className="text-gray-500 text-xl mb-5">Conversation Section</h2>
-
+         
         {/* Show Messages Section */}
         <div className="p-4 rounded-md mb-6 max-h-[70vh] overflow-y-auto">
           {messages.length > 0 ? (
@@ -85,6 +93,7 @@ function Page() {
 
                   <br />
                   <MarkDownTextFormater content={msg?.Ai} />
+                  <MyEditor content={msg?.Ai}/>
                 </div>
               </div>
             ))
@@ -115,6 +124,8 @@ function Page() {
           </button>
         </form>
       </div>
+
+     
     </section>
   );
 }
