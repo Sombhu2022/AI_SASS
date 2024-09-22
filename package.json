@@ -7,7 +7,6 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "vercel-build": "npm install --force && next build"
   },
   "peerDependencies": {
   "react": "^17.0.1 || ^18.0.0"
