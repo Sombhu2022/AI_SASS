@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm install --legacy-peer-deps && next build",
     "start": "next start",
     "lint": "next lint",
-    "vercel-build": "npm install --force && next build"
+    "vercel-build": "npm install --legacy-peer-deps && next build"
   },
   "peerDependencies": {
   "react": "^17.0.1 || ^18.0.0"
