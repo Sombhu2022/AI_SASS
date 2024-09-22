@@ -1,0 +1,11 @@
+{
+    "build": {
+      "env": {
+        "NODE_ENV": "production"
+      },
+      "cache": {
+        "include": ["node_modules"]
+      }
+    }
+  }
+  
