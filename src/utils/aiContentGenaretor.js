@@ -1,13 +1,14 @@
-"use client"
 
-import { useAuth } from '@clerk/nextjs';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
 
-export const aiContentGenaretor = async(prompt)=>{
+export const aiContentGenaretor = async(prompt , userId)=>{
+    const key = process.env.GEMINI_API_KEY;
+    const genAI = new GoogleGenerativeAI( key)
+    console.log(key);
+    
     try {
-        const {userId} = useAuth()
+       
         if (!userId) return { message:"user not Authenticate" , status:400 }
         if (!prompt) return { message:"please enter valid prompt " , status:500 }
 
@@ -22,5 +23,6 @@ export const aiContentGenaretor = async(prompt)=>{
     }
 
 }
+
 
 // ["Genarate a documentation for this project idea and add more information and flowchar as a editor formate not use image of flowchar or diagram " ,prompt]

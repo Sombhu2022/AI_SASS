@@ -13,9 +13,9 @@ export const POST = async (req) => {
   console.log(userId, prompt);
 
   if (!userId) {
-    return new NextResponse("User not authenticated", { status: 400 });
+    return NextResponse.json({ message: "You are not authenticate" }, { status: 401 });
   }
-  if(!prompt) return new NextResponse("please input valid propt " , {status:400})
+  if(!prompt) return NextResponse.json({ message: "please input valid prompt" }, { status: 400 });
 
   try {
     // const image = await openai.images.generate({ model:"dall-e-2", prompt: "A cute baby sea otter" });
@@ -24,7 +24,7 @@ export const POST = async (req) => {
     console.log(result);
  
     // Return the completion as JSON
-    return NextResponse.json({ message: "Message generated successfully" , data: result.response.candidates[0].content.parts[0].text });
+    return NextResponse.json({ message: "Message generated successfully" , data: result.response.candidates[0].content.parts[0].text }, {status:200});
   } catch (error) {
     console.error(error);
 

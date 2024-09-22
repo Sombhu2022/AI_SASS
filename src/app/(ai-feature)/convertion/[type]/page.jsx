@@ -8,7 +8,8 @@ import FormSection from "./_components/FormSection";
 
 import axios from "axios";
 import MyEditor from "@/components/MyEditor";
-import MarkDownTextFormater from "@/components/MarkDownTextFormater";
+
+
 
 function Page() {
   const [content, setContent] = useState({});
@@ -22,19 +23,23 @@ function Page() {
       setContent(data);
     }
   }, [contentTypeData]);
+ 
 
-  const handleContineu = (isContineu) => {
-    if (!isContineu) {
+  const handleContinue = (isContinue) => {
+    if (!isContinue) {
       setResponse("");
     }
   };
 
+  const handleChangeAiRes =(editContent)=>{
+        setResponse(editContent)
+  }
+
   const handleSubmit = async (prompt) => {
     console.log(prompt);
     const updatePrompt = [...content?.aiPrompt, prompt];
-    console.log(updatePrompt);
-    // const formdata = new FormData();
-    // formdata.set(updatePrompt)
+    // console.log(updatePrompt);
+    
 
     try {
       if (updatePrompt) {
@@ -81,7 +86,7 @@ function Page() {
         <FormSection
           allFields={content?.formData}
           onPrompt={handleSubmit}
-          isContineu={handleContineu}
+          isContineu={handleContinue}
           res={response}
           isLoading = {loading}
         />
@@ -89,7 +94,8 @@ function Page() {
 
       {/*  output section */}
       <div className="rounded-md bg-white md:max-w-[50vw] max-w-full">
-        <MyEditor content={response} />
+        <MyEditor content={response} handleContextChange={handleChangeAiRes}/>
+       
       </div>
     </section>
   );

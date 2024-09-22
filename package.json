@@ -4,14 +4,18 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm install --legacy-peer-deps && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "vercel-build": "npm install --legacy-peer-deps && next build"
   },
   "dependencies": {
     "@clerk/nextjs": "^5.5.2",
     "@google/generative-ai": "^0.19.0",
     "@react-pdf/renderer": "^3.4.4",
+    "@tiptap/core": "^2.7.2",
+    "@tiptap/react": "^2.7.2",
+    "@tiptap/starter-kit": "^2.7.2",
     "@toast-ui/react-editor": "^3.2.3",
     "axios": "^1.7.7",
     "html-to-pdfmake": "^2.5.13",

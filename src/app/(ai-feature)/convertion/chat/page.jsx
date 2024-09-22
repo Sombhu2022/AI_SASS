@@ -3,19 +3,24 @@
 import React, { useState } from 'react'
 import axios from "axios";
 import MarkDownTextFormater from '@/components/MarkDownTextFormater';
+import { aiContentGenaretor } from '@/utils/aiContentGenaretor';
+import { useAuth } from '@clerk/nextjs';
+
 
 function page() {
     const [prompt, setPrompt] = useState("");
     const [messages, setMessages] = useState([]); // Initial empty array
-  
+    const { userId} = useAuth()
   
     const handleSubmit = async (e) => {
       e.preventDefault();
       try {
         if (prompt) {
           const { data } = await axios.post("/api/ai/convertion", { prompt });
-  
+
           // Update messages directly
+          console.log("ai response",data);
+          
           const newMessage = { you: prompt, Ai: data?.data };
           setMessages([...messages, newMessage]);
   
