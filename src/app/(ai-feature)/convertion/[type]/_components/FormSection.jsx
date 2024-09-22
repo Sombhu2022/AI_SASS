@@ -46,7 +46,7 @@ function FormSection({ allFields , onPrompt , isContineu , res , isLoading}) {
        className={`${isLoading? "bg-blue-600/5 text-blue-600 hover:bg-blue-600/10 hover:text-blue-600 ":" bg-blue-600 hover:bg-blue-700 text-white"} px-5 font-semibold py-3 rounded-lg transition-colors duration-300`}
        onClick={submitHandle}
       >
-        {!isLoading? contineu?"Contineu":"Generate" : "loading..."}
+        {!isLoading? contineu?"Continue":"Generate" : "loading..."}
        
       </button>
       {
