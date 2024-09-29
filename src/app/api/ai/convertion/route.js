@@ -1,4 +1,4 @@
-import { auth } from '@clerk/nextjs/server';
+
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { NextResponse } from 'next/server';
 // import OpenAI from "openai";
@@ -8,7 +8,7 @@ import { NextResponse } from 'next/server';
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
 
 export const POST = async (req) => {
-  const { userId } =  auth(); // Ensure auth() resolves
+  const  userId  =  123 //get your user id 
   const {prompt} = await req.json();
   console.log(userId, prompt);
 
