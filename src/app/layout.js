@@ -22,8 +22,10 @@ export default function RootLayout({ children }) {
           <Header/>
 
         
-          <div className="mt-3 flex justify-end mr-8">
+          <div className="hidden ml-64 md:flex justify-between border bg-gray-700/10 border-gray-700 rounded-md p-5">
 
+         <h2 className="px-3 py-1 bg-yellow-600/15 border border-yellow-600 rounded-md "> BETA version lanched</h2>
+        
           <SignedOut>
             <SignInButton />
           </SignedOut>
