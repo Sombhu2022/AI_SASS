@@ -8,6 +8,8 @@ import FormSection from "./_components/FormSection";
 
 import axios from "axios";
 import MyEditor from "@/components/MyEditor";
+import CustomTextEditor from "@/components/CustomTextEditor";
+
 
 
 
@@ -94,8 +96,8 @@ function Page() {
 
       {/*  output section */}
       <div className="rounded-md bg-white md:max-w-[50vw] max-w-full">
-        <MyEditor content={response} handleContextChange={handleChangeAiRes}/>
-       
+        {/* <MyEditor content={response} handleContextChange={handleChangeAiRes}/> */}
+        <CustomTextEditor content={response} handleContextChange={handleChangeAiRes} />
       </div>
     </section>
   );

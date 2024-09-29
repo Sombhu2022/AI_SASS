@@ -3,7 +3,6 @@ import ReactPDF, { Document, Page, Text, View } from "@react-pdf/renderer";
 import fs from "fs";
 import path from "path";
 
-import PdfFormater from "@/components/PdfFormater";
 
 
 // Create Document Component
@@ -13,7 +12,6 @@ const MyDocument = ({content}) => (
    
    <View style={{ margin: 10, padding: 10, flexGrow: 1 }}>
      <Text>
-      {/* <PdfFormater markdownText={content}/> */}
       {content}
      </Text>
    </View>

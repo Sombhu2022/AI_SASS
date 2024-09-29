@@ -1,7 +1,7 @@
 "use client"
 import React from 'react'
 import Link from "next/link";
-import { ClerkProvider, SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+// import { ClerkProvider, SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 
 import { MdSpaceDashboard } from "react-icons/md";
 import { LuMessageSquare } from "react-icons/lu";
@@ -14,6 +14,7 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { IoMdClose } from "react-icons/io";
 
 import { useState } from "react";
+import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs';
 
 
 function Header() {

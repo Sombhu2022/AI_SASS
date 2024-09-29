@@ -13,7 +13,7 @@ function ContentType({ contentData }) {
           <p className="text-gray-600">{contentData?.description}</p>
         </div>
       </div>
-    </Link>
+    </Link> 
   );
 }
 
