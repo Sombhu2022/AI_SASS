@@ -5,6 +5,7 @@
 @import '../style/header.css';
 @import '../style/convertion.css';
 @import '../style/customTextEditor.css';
+@import '../style/custom.css';
 
 :root {
   --background: #ffffff;
