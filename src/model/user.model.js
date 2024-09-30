@@ -1,5 +1,6 @@
-const { Schema, models, model } = require("mongoose");
-
+import  { Schema, models, model } from "mongoose"
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
 
 const userModel = new Schema({
     userName:{
@@ -27,6 +28,13 @@ const userModel = new Schema({
         required: [true, 'Password is required'],
         minLength: [8, 'Password must be at least 8 characters long']
     },
+    profile_pic:{
+            url:{
+                type:String,
+            },
+            public_id:String
+        }
+    ,
     role: {
         type: String,
         enum: ['user', 'admin'],
@@ -55,4 +63,36 @@ const userModel = new Schema({
     
 } , {timestamps:true})
 
-export const Users = models.user || model("User" , userModel)
+
+
+// token genarate 
+userModel.methods.generateToken =function () {
+    const token =  jwt.sign(
+        { id:this._id , email:this.email , userName: this.userName},
+        process.env.JWT_SECRET,
+        { expiresIn: '10d' } // Token expiry time
+    )
+    return token;
+}
+
+// password encription 
+userModel.pre('save' , async function(next) {
+    if(!this.isModified){
+        next();
+    }
+    try {
+        this.password = await bcrypt.hash(this.password , 10)  
+    } catch (error) {
+        next(error)
+    }
+});
+
+
+// compare password method 
+userModel.methods.comparePassword = async function(password) {
+    return await bcrypt.compare(password , this.password);
+}
+
+
+
+export const Users = models.User || model("User" , userModel)

@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import axios from "axios";
 import MarkDownTextFormater from '@/components/MarkDownTextFormater';
-import { aiContentGenaretor } from '@/utils/aiContentGenaretor';
+
 import { useAuth } from '@clerk/nextjs';
 
 
