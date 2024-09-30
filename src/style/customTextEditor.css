@@ -17,7 +17,7 @@
 }
 
 .editor a{
-    @apply cursor-pointer text-blue-500
+    @apply cursor-pointer text-blue-500 hover:text-blue-900
 }
 
 .editor strong{
