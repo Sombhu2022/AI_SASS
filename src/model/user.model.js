@@ -46,6 +46,16 @@ const userModel = new Schema({
        default:false
     },
 
+    isTwoStepAuth:{
+        type:Boolean,
+        default:false
+    },
+    otp:{
+        type:Number
+    },
+    otpExpiary:{
+        type:Date
+    },
     isFree:{
       type:Boolean,
       default:true 
@@ -75,18 +85,19 @@ userModel.methods.generateToken =function () {
     return token;
 }
 
-// password encription 
-userModel.pre('save' , async function(next) {
-    if(!this.isModified){
-        next();
+// Password encryption 
+userModel.pre('save', async function (next) {
+    if (this.isModified('password')) { // Check if password has been modified
+        if (this.password) { // Ensure password exists
+            try {
+                this.password = await bcrypt.hash(this.password, 10);
+            } catch (error) {
+                return next(error);
+            }
+        }
     }
-    try {
-        this.password = await bcrypt.hash(this.password , 10)  
-    } catch (error) {
-        next(error)
-    }
+    next(); // Continue with the save operation
 });
-
 
 // compare password method 
 userModel.methods.comparePassword = async function(password) {

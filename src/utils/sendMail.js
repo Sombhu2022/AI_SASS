@@ -24,6 +24,8 @@ export const sendEmail = async (reciver , subject='' , message) => {
         };
       
         await transporter.sendMail(mailOptions);
+        console.log("email send");
+        
        return true; 
     } catch (error) {
        console.log("email not send" , error);
