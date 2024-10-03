@@ -5,8 +5,11 @@ import { useRouter } from "next/navigation";
 import { FaImage } from "react-icons/fa";
 import { RiRobot3Line } from "react-icons/ri";
 import Image from "next/image";
+import AuthProviders from "@/components/AuthProviders";
 
-export default function SignUpModal() {
+
+
+export default function SignUp() {
   const router = useRouter();
   const [userName, setUserName] = useState("");
   const [fullName, setFullName] = useState("");
@@ -41,6 +44,7 @@ export default function SignUpModal() {
     };
 
     try {
+      setError("")
       const response = await axios.post(
         "/api/auth/signup",
         JSON.stringify(data)
@@ -48,13 +52,14 @@ export default function SignUpModal() {
       console.log(response);
 
       if (response.data.success) {
-        router.push("/convertion");
+        router.push("/ai/convertion");
       }
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed");
       console.log(err);
     }
   };
+
 
   // Close the modal and navigate back to the previous page
   const handleClose = () => {
@@ -64,6 +69,7 @@ export default function SignUpModal() {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50">
       <div className="relative shadow-lg rounded-lg p-8 max-w-md w-full border border-gray-600 bg-gray-600/10">
+       
         {/* Close button */}
         <button
           onClick={handleClose}
@@ -72,14 +78,16 @@ export default function SignUpModal() {
           <span className="text-3xl text-white mt-3">&times;</span>
         </button>
 
+        
         <h1 className="flex justify-center items-center gap-3 p-5 mb-3">
           <RiRobot3Line className="text-pink-600 text-3xl rounded-md" />
           <span>Thinkcraft.AI</span>
         </h1>
 
+        {/* sign-up form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="image">
+            <label htmlFor="image" className="cursor-pointer">
               {image ? (
                 <Image
                   src={image}
@@ -89,11 +97,12 @@ export default function SignUpModal() {
                   alt="Profile"
                 />
               ) : (
-                <div className="text-[40px] p-10 text-purple-600 rounded-md max-w-min">
-                  <FaImage />
+                <div className="p-10 text-purple-600 bg-purple-700/10 rounded-md max-w-min ">
+                  <FaImage  className="size-10"/>
                 </div>
               )}
             </label>
+
             <input
               id="image"
               type="file"
@@ -151,7 +160,7 @@ export default function SignUpModal() {
 
           {error && <p className="text-red-500 text-sm">{error}</p>}
 
-          <button type="submit" className="w-full custom-button">
+          <button type="submit" className="w-full custom-button mt-10">
             Register
           </button>
         </form>
@@ -161,6 +170,11 @@ export default function SignUpModal() {
             Login
           </a>
         </p>
+        <br />
+
+         {/* OAuth Providers */}
+         <AuthProviders/>
+     
       </div>
     </div>
   );

@@ -3,17 +3,18 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { RiRobot3Line } from "react-icons/ri";
+import AuthProviders from "@/components/AuthProviders";
+import OtpVerificationSection from "./_components/OtpVerificationSection";
 
 export default function Page() {
   const router = useRouter();
   const [emailOrUserName, setEmailOrUserName] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [otp, setOtp] = useState(""); // For OTP verification
   const [isTwoStepAuth, setIsTwoStepAuth] = useState(false); // Track if 2-step auth is required
   const [authId, setAuthId] = useState(""); // For storing authId after login
-  const [otpExpireTime, setOtpExpireTime] = useState(null); // For OTP expiration time
   const [remainingTime, setRemainingTime] = useState(300); // Default 5 minutes in seconds
+ 
 
   const handleSignIn = async (e) => {
     e.preventDefault();
@@ -29,16 +30,15 @@ export default function Page() {
         password,
       });
       console.log(response);
+      
 
-      if (response.data.success && response.data.isTwoStepAuth) {
-        // If two-step auth is required, show OTP verification form
+      if (response.data.success && response.data?.data?.isTwoStepAuth) {
         setIsTwoStepAuth(true);
         setAuthId(emailOrUserName); // Store the authId for OTP submission
-        
-        // Set OTP expire time from response if available, otherwise default to 5 mins
-        const expireTime = response.data.otpExpireTime || Date.now() + 5 * 60 * 1000; // 5 minutes from now
-        setOtpExpireTime(expireTime);
+
+        const expireTime =response.data.otpExpireTime || Date.now() + 5 * 60 * 1000; // 5 minutes from now
         setRemainingTime(Math.floor((expireTime - Date.now()) / 1000)); // Convert to seconds
+       
       } else if (response.data.success) {
         router.push("/dashboard"); // Redirect to dashboard if login is successful
       }
@@ -48,46 +48,12 @@ export default function Page() {
     }
   };
 
-  const handleOtpVerification = async (e) => {
-    e.preventDefault();
 
-    if (!otp) {
-      setError("OTP is required");
-      return;
-    }
-
-    try {
-      const response = await axios.post("/api/auth/verify-otp", {
-        authId,
-        otp,
-      });
-      console.log(response);
-
-      if (response.data.success) {
-        router.push("/dashboard"); // Redirect to dashboard upon successful OTP verification
-      } else {
-        setError("Invalid OTP");
-      }
-    } catch (err) {
-      setError(err.response?.data?.message || "OTP verification failed");
-      console.log(err);
-    }
-  };
-
+ 
   const handleClose = () => {
     router.back();
   };
 
-  // Timer effect for OTP
-  useEffect(() => {
-    if (remainingTime <= 0) return; // Stop if time has expired
-
-    const timer = setInterval(() => {
-      setRemainingTime((prev) => prev - 1);
-    }, 1000);
-
-    return () => clearInterval(timer); // Cleanup on unmount or when time expires
-  }, [remainingTime]);
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50">
@@ -137,37 +103,8 @@ export default function Page() {
             </button>
           </form>
         ) : (
-          <form onSubmit={handleOtpVerification} className="space-y-4">
-            <p className="text-sm text-gray-500">
-              A two-step verification OTP has been sent to your email. Please enter the OTP below.
-            </p>
-            <div>
-              <input
-                type="number"
-                name="otp"
-                placeholder="Enter OTP"
-                value={otp}
-                onChange={(e) => setOtp(e.target.value)}
-                required
-                className="custom-input"
-              />
-            </div>
-
-            {error && <p className="text-red-500 text-sm">{error}</p>}
-
-            {/* Timer Display */}
-            <div className="text-sm text-gray-500">
-              {remainingTime > 0 ? (
-                <p>Time remaining: {Math.floor(remainingTime / 60)}:{(remainingTime % 60).toString().padStart(2, '0')}</p>
-              ) : (
-                <p className="text-red-500">OTP expired!</p>
-              )}
-            </div>
-
-            <button type="submit" className="w-full custom-button" disabled={remainingTime <= 0}>
-              Verify OTP
-            </button>
-          </form>
+          // otp verification section 
+            <OtpVerificationSection timer={remainingTime} authId={authId}  />
         )}
 
         <p className="mt-4 text-center text-sm text-gray-500">
@@ -176,6 +113,12 @@ export default function Page() {
             Sign up
           </a>
         </p>
+
+       <br />
+
+       {/* Oauth providers */}
+       <AuthProviders/>
+
       </div>
     </div>
   );

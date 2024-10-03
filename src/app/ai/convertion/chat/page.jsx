@@ -10,7 +10,7 @@ import MarkDownTextFormater from '@/components/MarkDownTextFormater';
 function page() {
     const [prompt, setPrompt] = useState("");
     const [messages, setMessages] = useState([]); // Initial empty array
-    
+ 
   
     const handleSubmit = async (e) => {
       e.preventDefault();

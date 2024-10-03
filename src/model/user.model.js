@@ -26,7 +26,8 @@ const userModel = new Schema({
     password: {
         type: String,
         required: [true, 'Password is required'],
-        minLength: [8, 'Password must be at least 8 characters long']
+        minLength: [8, 'Password must be at least 8 characters long'],
+        
     },
     profile_pic:{
             url:{
@@ -56,6 +57,11 @@ const userModel = new Schema({
     otpExpiary:{
         type:Date
     },
+    createWith:{
+       type:String,
+       default:"emailAndPassword"
+    },
+
     isFree:{
       type:Boolean,
       default:true 
@@ -103,7 +109,6 @@ userModel.pre('save', async function (next) {
 userModel.methods.comparePassword = async function(password) {
     return await bcrypt.compare(password , this.password);
 }
-
 
 
 export const Users = models.User || model("User" , userModel)
