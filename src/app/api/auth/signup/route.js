@@ -1,8 +1,9 @@
 import { dbConnect } from "@/db/dbConnection"
 import { Users } from "@/model/user.model"
+import { ApiError, ApiResponse } from "@/utils/customResponse"
 import { fileUploader } from "@/utils/imageUpload"
 import { sendEmail } from "@/utils/sendMail"
-import { NextResponse } from "next/server"
+
 
 export const POST = async(req)=>{
   
@@ -15,7 +16,7 @@ export const POST = async(req)=>{
    
         // check all filed present or not
         if (!image || !email || !password || !userName ){
-            return NextResponse.json({message:"required field must be put"}, {status:400})
+            return ApiError.send("required field must be put", 400)
         }
 
         // find user exist or not using email or username
@@ -27,7 +28,7 @@ export const POST = async(req)=>{
         });
 
         if(isExist){
-            return NextResponse.json({message:"this email or username already exist "}, {status:400})
+            return ApiError.send("this email or username already exist ", 400)
         }
 
 
@@ -36,7 +37,7 @@ export const POST = async(req)=>{
         console.log(url);
         
         if(error){
-           return NextResponse.json({message:"file upload faild " , success: false} , {status:400})
+           return ApiError.send("file upload faild " , 400)
         }
 
         const tempImage = {
@@ -67,24 +68,23 @@ export const POST = async(req)=>{
             console.log("email send faild");
             
         }
+
+        //cookies 
+        const cookies = [
+            {
+                name:'token',
+                value:token
+            }
+        ]
+
         // create response 
-        const response = NextResponse.json(
-            { message: "Registration successful", data: user, token },
-            { status: 200 }
-          );
-      
-          // Set the cookie properly
-          response.cookies.set("token", token, {
-            httpOnly: true,
-          });
-      
-          return response;
+        return ApiResponse.send('registration successfull' , {data:user} ,200 , cookies)
     
    
 
     } catch (error) {
         console.error(error)
-        return NextResponse.json({message:"somthing wrong , please check connection" , error}, {status:400})
+        return ApiError.send("somthing wrong , please check connection" ,{ error}, 400)
 
     }
 }

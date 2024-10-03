@@ -14,7 +14,7 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { IoMdClose } from "react-icons/io";
 
 import { useState } from "react";
-import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs';
+
 
 
 function Header() {
@@ -32,28 +32,28 @@ function Header() {
       icon: <LuMessageSquare />,
       iconColor: "text-blue-600",
       iconbg: "bg-blue-600/10",
-      link: "/convertion",
+      link: "/ai/convertion",
     },
     {
       name: "Image generation",
       icon: <FaImage />,
       iconColor: "text-amber-600",
       iconbg: "bg-amber-600/10",
-      link: "/image",
+      link: "/ai/image",
     },
     {
       name: "Code Generation",
       icon: <FaCode />,
       iconColor: "text-green-600",
       iconbg: "bg-green-600/10",
-      link: "/code",
+      link: "/ai/code",
     },
     {
       name: "Video Generation",
       icon: <FaVideo />,
       iconColor: "text-pink-500",
       iconbg: "bg-pink-600/10",
-      link: "/video",
+      link: "/ai/video",
     },
     {
       name: "Setting",
@@ -73,19 +73,16 @@ function Header() {
 
       <h1 className="flex gap-3 items-center ">
       <RiRobot3Line className="text-pink-600 text-3xl rounded-md" /> 
-      <span> AI_SAAS </span>
+      <span> ThinkCraft.ai </span>
     </h1>
 
      <div className='flex justify-between gap-5' >
 
      {/* Mobile Authentication Section */}
     <div className="md:hidden flex items-center gap-2">
-      <SignedOut>
-        <SignInButton className="py-1 px-3 border rounded-lg text-gray-800 bg-gray-200" />
-      </SignedOut>
-      <SignedIn>
-        <UserButton />
-      </SignedIn>
+      
+       {/* profile section */}
+
       </div>
 
     {/* Hamburger Menu */}

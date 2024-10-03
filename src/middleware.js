@@ -1,12 +1,42 @@
-import { clerkMiddleware } from '@clerk/nextjs/server'
+import { NextResponse } from 'next/server';
+import jwt from 'jsonwebtoken';
 
-export default clerkMiddleware()
+
+export async function middleware(request) {
+
+    console.log("requasting path",request.nextUrl.pathname);
+    
+    // If the user is on the home page (`/`), allow access without checking authentication
+    if (request.nextUrl.pathname === '/') {
+      return NextResponse.next()
+    }
+
+    const isPublicPath = request.nextUrl.pathname === '/sign-in' || request.nextUrl.pathname === '/sign-up'
+
+    const token = request.cookies.get('token')?.value || ''
+    
+    
+
+    if(isPublicPath && token){
+       
+        
+        return NextResponse.redirect(new URL('/' , request.nextUrl))
+    }
+
+    if(!token && !isPublicPath){
+     
+        
+        return NextResponse.redirect(new URL('/sign-in' , request.nextUrl))
+    }
+    if(!token && isPublicPath){
+      
+        
+        return NextResponse.next()
+    }
+
+}
 
 export const config = {
-  matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
-    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    // Always run for API routes
-    '/(api|trpc)(.*)',
-  ],
-}
+    matcher: ['/ai/:path*', "/" , '/profile'  ,'/dashboard' , '/sign-in' , '/sign-up' ], // Apply to all pages except static files
+  };
+  

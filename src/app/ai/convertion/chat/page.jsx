@@ -4,13 +4,12 @@ import React, { useState } from 'react'
 import axios from "axios";
 import MarkDownTextFormater from '@/components/MarkDownTextFormater';
 
-import { useAuth } from '@clerk/nextjs';
 
 
 function page() {
     const [prompt, setPrompt] = useState("");
     const [messages, setMessages] = useState([]); // Initial empty array
-    const { userId} = useAuth()
+   
   
     const handleSubmit = async (e) => {
       e.preventDefault();

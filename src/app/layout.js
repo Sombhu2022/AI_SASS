@@ -1,6 +1,6 @@
 
 import "./globals.css";
-import { ClerkProvider, SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+
 
 import Header from "@/components/Header";
 
@@ -15,7 +15,7 @@ export default function RootLayout({ children }) {
 
   return (
     
-    <ClerkProvider>
+  
     <html lang="en">
       <body>
         
@@ -26,12 +26,8 @@ export default function RootLayout({ children }) {
 
          <h2 className="px-3 py-1 bg-yellow-600/15 border border-yellow-600 rounded-md "> BETA version lanched</h2>
         
-          <SignedOut>
-            <SignInButton />
-          </SignedOut>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
+          {/* profile section */}
+
           </div>
         
            <main className="main-content p-4" >
@@ -40,6 +36,6 @@ export default function RootLayout({ children }) {
 
       </body>
     </html>
-  </ClerkProvider>
+
   );
 }

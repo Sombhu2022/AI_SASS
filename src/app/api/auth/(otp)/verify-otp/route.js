@@ -1,7 +1,9 @@
 import { dbConnect } from "@/db/dbConnection";
 import { Users } from "@/model/user.model";
+import { ApiError, ApiResponse } from "@/utils/customResponse";
 import { timeExpire } from "@/utils/timeExpire";
-import { NextResponse } from "next/server";
+
+
 
 
 // Helper function to reset OTP and expiry
@@ -22,7 +24,7 @@ export const POST = async (req) => {
 
         // Check if both fields are provided
         if (!authId || !otp) {
-            return NextResponse.json({ message: "Auth ID (email or username) and OTP are required." }, { status: 400 });
+            return ApiError.send("Auth ID (email or username) and OTP are required.", 400);
         }
 
         // Check if the user exists
@@ -34,19 +36,19 @@ export const POST = async (req) => {
         });
 
         if (!user) {
-            return NextResponse.json({ message: "User not authenticated!" }, { status: 400 });
+            return ApiError.send( "User not authenticated!" , 400);
         }
 
         // Check if OTP matches
         const inputOtp = Number(otp)
         if (user.otp !== inputOtp) {
-            return NextResponse.json({ message: "OTP not matched! Please provide a valid OTP." }, { status: 400 });
+            return ApiError.send("OTP not matched! Please provide a valid OTP." ,400);
         }
 
         // Check if OTP has expired
         if (timeExpire(user.otpExpiary)) {
             await resetOtp(user); // Reset OTP if expired
-            return NextResponse.json({ message: "OTP expired!" }, { status: 400 });
+            return ApiError.send("OTP expired!" , 400 );
         }
 
         // Reset OTP and expiry if valid
@@ -56,13 +58,17 @@ export const POST = async (req) => {
         const token = user.generateToken();
 
         // Prepare success response
-        const response = NextResponse.json({ message: "Login successful", success: true }, { status: 200 });
-        response.cookies.set('token', token, { httpOnly: true });
-
-        return response;
+        const cookies = [
+            {
+                name:'token',
+                value:token
+            }
+        ]
+       return ApiResponse.send( "Login successful", {success : true}, 200 , cookies);
+   
     } catch (error) {
         console.error(error); // Log the error for debugging
-        return NextResponse.json({ message: "Something went wrong, please try again!" }, { status: 500 });
+        return ApiError.send("Something went wrong, please try again!" ,500);
     }
 };
 

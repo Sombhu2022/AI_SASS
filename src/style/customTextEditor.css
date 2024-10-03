@@ -30,6 +30,6 @@
 .editor li strong{
     @apply mt-2 ml-[-5px]
 }
-.editor p{
-    
+.editor code{
+     @apply my-5 px-4 bg-slate-200 border-gray-300 rounded-sm text-blue-500
 }
