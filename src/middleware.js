@@ -37,6 +37,6 @@ export async function middleware(request) {
 }
 
 export const config = {
-    matcher: ['/ai/:path*', "/" , '/profile'  ,'/dashboard' , '/sign-in' , '/sign-up' ], // Apply to all pages except static files
+    matcher: ['/ai/:path*', "/:path*" , '/profile'  ,'/dashboard' , '/sign-in' , '/sign-up' ], // Apply to all pages except static files
   };
   
