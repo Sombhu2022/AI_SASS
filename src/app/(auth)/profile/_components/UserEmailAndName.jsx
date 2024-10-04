@@ -2,12 +2,17 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { MdModeEditOutline } from 'react-icons/md';
+import EmailVerifiCationPopup from './EmailVerifiCationPopup';
 
-function UserEmailAndName({userName , email , id}) {
+function UserEmailAndName({userName , email , id , isVerify}) {
     const [editEmail, setEditEmail] = useState(false);
     const [editUsername, setEditUsername] = useState(false);
     const [newEmail, setNewEmail] = useState('');
     const [newUsername, setNewUsername] = useState('');
+    const [isEmailVerifyShow, setIsEmailVerifyShow] = useState(false);
+    const [isShowResend, setIsShowResend] = useState(false);
+    const [loading , setLoading] = useState(false)
+    const [error , setError] = useState('')
 
     console.log(userName , email);
     
@@ -19,25 +24,43 @@ function UserEmailAndName({userName , email , id}) {
     
   // Save email changes
   const handleSaveEmail = async () => {
-    try {
-        const data = await axios.patch(`/api/auth/profile/${id}` , {email:newEmail})
-        console.log(data);
+    if(newEmail !== email){
+      setLoading(true)
+      try {
+          const data = await axios.patch(`/api/auth/profile/${id}` , {email:newEmail})
+          console.log(data);
+  
+        setEditEmail(false);
+      } catch (error) {
+        console.error("Error updating email:", error);
+      }
+      finally{
+        setLoading(false)
+      }
 
-      setEditEmail(false);
-    } catch (error) {
-      console.error("Error updating email:", error);
+    }else{
+      setEditEmail(false)
     }
   };
 
   // Save username changes
   const handleSaveUsername = async () => {
-    try {
-        const data = await axios.patch(`/api/auth/profile/${id}` , {userName:newUsername})
-        console.log(data);
-      setEditUsername(false);
-    } catch (error) {
-      console.error("Error updating username:", error);
-    }
+   if(newUsername !== userName){
+    setLoading(true)
+     try {
+         const data = await axios.patch(`/api/auth/profile/${id}` , {userName:newUsername})
+         console.log(data);
+         setEditUsername(false);
+     } catch (error) {
+       console.error("Error updating username:", error);
+     }
+     finally{
+      setLoading(false)
+     }
+
+   }else{
+    setEditUsername(false)
+   }
   };
 
   return (
@@ -57,7 +80,7 @@ function UserEmailAndName({userName , email , id}) {
                 onClick={()=>handleSaveUsername('userName' , newUsername)}
                 className="ml-2 bg-blue-500 text-white px-4 py-2 rounded"
               >
-                Save
+               {loading?'loading...':'save'}
               </button>
             </div>
           ) : (
@@ -66,6 +89,19 @@ function UserEmailAndName({userName , email , id}) {
             </p>
           )}
         </div>
+
+         {/* verify email popup section , if we try to verify our email then this popup show */}
+         <EmailVerifiCationPopup
+          message={
+            'Please click the "Verify Email" button to confirm your email address. If you need to update your email, kindly do so before verifying.'
+          }
+
+         isEmailVerifyShow={isEmailVerifyShow}
+         isShowResend={isShowResend}
+         onChangeEmailVerificationShow={(bool)=>setIsEmailVerifyShow(bool)}
+         onChangeSowResend={(bool)=>setIsShowResend(bool)}
+
+        />
 
         {/* Editable Email */}
         <div className="text-center mb-6">
@@ -82,13 +118,19 @@ function UserEmailAndName({userName , email , id}) {
                 onClick={()=>handleSaveEmail('email' , newEmail)}
                 className="ml-2 bg-blue-500 text-white px-4 py-2 rounded"
               >
-                Save
+                {loading?'loading...':'save'}
               </button>
             </div>
           ) : (
+            <div className='flex flex-wrap gap-3  justify-center items-center'>
+
             <p className="cursor-pointer" onClick={() => setEditEmail(true)}>
-              Email: <span className="font-medium">{newEmail}</span> <MdModeEditOutline className="inline-block text-gray-600" />
+            <span className="font-medium">{newEmail}</span> <MdModeEditOutline className="inline-block text-gray-600" />
             </p>
+            {
+              !isVerify &&(<button className='custom-button' onClick={()=>setIsEmailVerifyShow(true)} > Verify</button>)
+            }
+            </div>
           )}
         </div>
 
