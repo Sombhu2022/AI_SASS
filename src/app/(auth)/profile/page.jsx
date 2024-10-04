@@ -6,20 +6,27 @@ import { MdModeEditOutline } from "react-icons/md";
 import ImageSection from "./_components/ImageSection";
 import UserEmailAndName from "./_components/UserEmailAndName";
 import TwoStepVerification from "./_components/TwoStepVerification";
+import Loader from "@/components/Loader";
+
+
 
 const ProfilePage = () => {
   const [user, setUser] = useState({});
+  const [loading , setLoading] = useState(true)
  
-
-  const router = useRouter()
+  const router = useRouter();
 
   // Function to fetch the user profile
   const fetchUserProfile = async () => {
+    setLoading(true)
     try {
       const res = await axios.get("/api/auth/profile");
       setUser(res.data.data.user);
     } catch (error) {
       console.error("Error fetching profile:", error);
+    }
+    finally{
+      setLoading(false)
     }
   };
 
@@ -27,28 +34,27 @@ const ProfilePage = () => {
     fetchUserProfile();
   }, []);
 
-  const handleLogOut = async()=>{
-
+  const handleLogOut = async () => {
     try {
-      const data = await axios.get('/api/auth/logout')
+      const data = await axios.get("/api/auth/logout");
       console.log(data);
-      router.push("/")
-      
+      router.push("/");
     } catch (error) {
       console.log(error);
-      
     }
+  };
+
+  if(loading){
+    return(<Loader message="Fetch User ..."/> )
   }
 
- const handleCustom = (value)=>{
-     alert(value)
- }
-
+  const handleCustom = (value) => {
+    alert(value);
+  };
 
   return (
     <div className="flex justify-center items-center min-h-screen ">
       <div className="bg-gray-700/10 rounded-lg shadow-lg p-8 w-full max-w-lg">
-
         {/* Profile Picture */}
         <ImageSection image_url={user?.profile_pic?.url} id={user?._id} />
 
@@ -56,10 +62,15 @@ const ProfilePage = () => {
         <h2 className="text-center text-2xl font-bold text-gray-800 mb-4">
           {user?.fullName}
         </h2>
-   
+
         {/* user and email section */}
-        <UserEmailAndName userName={user?.userName} email={user?.email} id={user?._id} />
-        
+        <UserEmailAndName
+          userName={user?.userName}
+          email={user?.email}
+          id={user?._id}
+          isVerify={user?.isVerify}
+        />
+
         {/* Membership Status */}
         <p className="text-center text-gray-700 mb-6">
           Membership:{" "}
@@ -72,15 +83,25 @@ const ProfilePage = () => {
           </span>
         </p>
 
+       
+
         {/* Two-Step Verification Toggle */}
-        <TwoStepVerification  twoStepVerify={user?.isTwoStepAuth} id={user?._id} />
+        <TwoStepVerification
+          twoStepVerify={user?.isTwoStepAuth}
+          id={user?._id}
+          isVerify={user?.isVerify}
+        />
+
 
         {/* Action Buttons */}
         <div className="flex justify-center gap-4">
-          <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg">
+          <button className="custom-button">
             Update Profile
           </button>
-          <button onClick={handleLogOut}  className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg">
+          <button
+            onClick={handleLogOut}
+            className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md"
+          >
             Logout
           </button>
         </div>
