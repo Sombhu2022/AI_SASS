@@ -30,7 +30,7 @@ export default function RootLayout({ children }) {
 
           </div>
         
-           <main className="main-content p-4" >
+           <main className="main-content p-0" >
           {children}
           </main>
 
