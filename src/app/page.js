@@ -2,6 +2,8 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
+import SpinnerLoader from "@/components/SpinnerLoader";
+import MessageAlert from "@/components/MessageAlert";
 
 function HomePage() {
   const router = useRouter();
@@ -12,6 +14,7 @@ function HomePage() {
 
   return (
     <div className="bg-gray-50 text-gray-800">
+    <MessageAlert/>
       {/* Hero Section */}
       <section className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
         <div className="text-center max-w-2xl mx-auto">
