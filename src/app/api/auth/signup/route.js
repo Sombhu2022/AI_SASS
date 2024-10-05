@@ -7,7 +7,7 @@ import { sendEmail } from "@/utils/sendMail"
 
 export const POST = async(req)=>{
   
-    const { image , email , password , userName , fullName } = await req.json()
+    const { email , password , userName , fullName } = await req.json()
     
     try {
 
@@ -15,7 +15,7 @@ export const POST = async(req)=>{
         dbConnect()
    
         // check all filed present or not
-        if (!image || !email || !password || !userName ){
+        if (!email || !password || !userName ){
             return ApiError.send("required field must be put", 400)
         }
 
@@ -30,29 +30,13 @@ export const POST = async(req)=>{
         if(isExist){
             return ApiError.send("this email or username already exist ", 400)
         }
-
-
-        // upload image in cloudinary 
-        const { url , public_id , error} = await fileUploader(image)
-        console.log(url);
-        
-        if(error){
-           return ApiError.send("file upload faild " , 400)
-        }
-
-        const tempImage = {
-            url ,
-            public_id
-            }
         
         // crate user instance
         const user = new Users({
             userName ,
             fullName:fullName || "",
             email,
-            password,
-            profile_pic:tempImage
-
+            password
         }) 
 
         // genarate cookice

@@ -29,6 +29,9 @@ export class ApiResponse {
       const options ={
          httpOnly : true,
          sameSite: 'Strict',
+         path: '/',
+         maxAge:  60 * 60 * 24 * 10, // 10 day
+
       };
 
       nextResponse.cookies.set(name, value, options);

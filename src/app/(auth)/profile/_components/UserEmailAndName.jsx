@@ -3,6 +3,8 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { MdModeEditOutline } from 'react-icons/md';
 import EmailVerifiCationPopup from './EmailVerifiCationPopup';
+import Notify from '@/utils/NotificationManager';
+import { useRouter } from 'next/navigation';
 
 function UserEmailAndName({userName , email , id , isVerify}) {
     const [editEmail, setEditEmail] = useState(false);
@@ -15,7 +17,7 @@ function UserEmailAndName({userName , email , id , isVerify}) {
     const [error , setError] = useState('')
 
     console.log(userName , email);
-    
+    const router = useRouter()
 
     useEffect(()=>{
         setNewEmail(email)
@@ -29,9 +31,11 @@ function UserEmailAndName({userName , email , id , isVerify}) {
       try {
           const data = await axios.patch(`/api/auth/profile/${id}` , {email:newEmail})
           console.log(data);
-  
-        setEditEmail(false);
+          Notify.success(data.data.message)
+          setEditEmail(false);
+          window.location.reload()
       } catch (error) {
+        Notify.error(error.message || 'profile not update')
         console.error("Error updating email:", error);
       }
       finally{
@@ -48,10 +52,13 @@ function UserEmailAndName({userName , email , id , isVerify}) {
    if(newUsername !== userName){
     setLoading(true)
      try {
-         const data = await axios.patch(`/api/auth/profile/${id}` , {userName:newUsername})
-         console.log(data);
+         const res = await axios.patch(`/api/auth/profile/${id}` , {userName:newUsername})
+         console.log(res);
+         Notify.success(res.data.message || 'profile updated')
          setEditUsername(false);
+         window.location.reload()
      } catch (error) {
+      Notify.error(error.message || 'Your Profile Not Update')
        console.error("Error updating username:", error);
      }
      finally{

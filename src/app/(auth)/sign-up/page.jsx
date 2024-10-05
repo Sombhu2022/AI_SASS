@@ -6,6 +6,7 @@ import { FaImage } from "react-icons/fa";
 import { RiRobot3Line } from "react-icons/ri";
 import Image from "next/image";
 import AuthProviders from "@/components/AuthProviders";
+import SpinnerLoader from "@/components/SpinnerLoader";
 
 
 
@@ -17,6 +18,7 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [image, setImage] = useState("");
   const [error, setError] = useState("");
+  const [loading , setLoading] = useState(false)
 
   const fileHandle = async (e) => {
     const file = e.target.files[0];
@@ -30,7 +32,7 @@ export default function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!image || !email || !password || !userName) {
+    if (!email || !password || !userName) {
       setError("All fields are required");
       return;
     }
@@ -40,11 +42,11 @@ export default function SignUp() {
       fullName,
       email,
       password,
-      image,
     };
 
     try {
       setError("")
+      setLoading(true)
       const response = await axios.post(
         "/api/auth/signup",
         JSON.stringify(data)
@@ -57,7 +59,10 @@ export default function SignUp() {
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed");
       console.log(err);
+    }finally{
+      setLoading(false)
     }
+
   };
 
 
@@ -86,34 +91,6 @@ export default function SignUp() {
 
         {/* sign-up form */}
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="image" className="cursor-pointer">
-              {image ? (
-                <Image
-                  src={image}
-                  width={70}
-                  height={70}
-                  className="rounded-full"
-                  alt="Profile"
-                />
-              ) : (
-                <div className="p-10 text-purple-600 bg-purple-700/10 rounded-md max-w-min ">
-                  <FaImage  className="size-10"/>
-                </div>
-              )}
-            </label>
-
-            <input
-              id="image"
-              type="file"
-              accept="image/*"
-              name="image"
-              onChange={fileHandle}
-              required
-              className="hidden"
-            />
-          </div>
-
           <div>
             <input
               type="text"
@@ -161,7 +138,7 @@ export default function SignUp() {
           {error && <p className="text-red-500 text-sm">{error}</p>}
 
           <button type="submit" className="w-full custom-button mt-10">
-            Register
+            {loading?(<div className="flex gap-2 justify-center items-center">Loading... <SpinnerLoader/></div>):("Register")}
           </button>
         </form>
         <p className="mt-4 text-center text-sm text-gray-500">
