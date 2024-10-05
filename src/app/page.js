@@ -1,9 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import SpinnerLoader from "@/components/SpinnerLoader";
 import MessageAlert from "@/components/MessageAlert";
+import Notify from "@/utils/NotificationManager";
 
 function HomePage() {
   const router = useRouter();
@@ -12,23 +13,28 @@ function HomePage() {
     router.push("/ai/convertion"); // Redirect to signup page or any relevant page
   };
 
+  useEffect(()=>{
+    console.log('under the useEffect');
+    
+    Notify.success('wellcome to ThinkCraft.ai , your Learning Partner☺️☺️')
+  })
+
   return (
     <div className="bg-gray-50 text-gray-800">
-    <MessageAlert/>
       {/* Hero Section */}
-      <section className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
+      <section className="min-h-screen flex items-center justify-center bg-gradient-to-r from-gray-950 to-gray-800 text-white">
         <div className="text-center max-w-2xl mx-auto">
           <h1 className="text-5xl font-bold mb-4">
             Welcome to <span className="text-yellow-300">ThinkCraft.ai</span>
           </h1>
-          <p className="text-lg mb-8">
+          <p className="text-lg mb-8 text-gray-400">
             Revolutionize the way you work with AI-powered solutions for
             generating documents, code, images, and more. Unlock endless
             possibilities with just a few clicks.
           </p>
           <button
             onClick={handleGetStarted}
-            className="bg-yellow-300 text-gray-800 px-6 py-3 rounded-lg font-semibold hover:bg-yellow-400 transition duration-300"
+            className="bg-yellow-300/10 border border-yellow-300 hover:text-black text-gray-300 px-6 py-3 rounded-lg font-semibold hover:bg-yellow-400 transition duration-300"
           >
             Get Started
           </button>

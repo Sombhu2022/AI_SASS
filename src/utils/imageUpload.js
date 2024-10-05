@@ -14,3 +14,23 @@ export const fileUploader = async (file , type='image')=>{
     }
 
 }
+
+export const fileDestroy = async( file_path )=>{
+
+  if(file_path){
+    try {
+       
+      const data = await cloudinary.uploader.destroy(file_path)
+      // console.log(data);
+      return true
+  
+    } catch (error) {
+      console.error(error);
+      
+      return false
+    }
+
+  }
+  return false
+
+}

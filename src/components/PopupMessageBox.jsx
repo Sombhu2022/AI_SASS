@@ -9,7 +9,8 @@ function PopupMessageBox({
   type = "success",
   note='',
   onButtonClick ='',
-  isButtonActive = true
+  isButtonActive = true,
+  onCallBackUrl = ''
 }) {
   const [customBgColor, setCustomBgColor] = useState(
     "bg-green-500 hover:bg-green-700"
@@ -38,6 +39,14 @@ function PopupMessageBox({
     }
   }
 
+  const handleClose = ()=>{
+    if(onCallBackUrl){
+      console.log("on use call back");
+      onCallBackUrl()
+    }
+    setIsShow(false)
+  }
+
   return (
     <>
         {isShow ? (<div className="popup-container">
@@ -45,9 +54,7 @@ function PopupMessageBox({
               {/* Close button */}
               <div className="flex justify-end ">
                 <button
-                  onClick={() => {
-                   setIsShow(false)
-                  }}
+                  onClick={ handleClose}
                   className=""
                 >
                   <span className="text-3xl text-black mt-3">&times;</span>

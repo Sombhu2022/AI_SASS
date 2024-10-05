@@ -7,8 +7,11 @@ export async function middleware(request) {
     const isPublicPath = request.nextUrl.pathname === '/sign-in' || request.nextUrl.pathname === '/sign-up';
     
     // Get the token from cookies
-    const token = request.cookies.get('token')?.value || '';
+    const token = request.cookies.get('token')?.value ;
     
+    console.log('token' , token? true:false);
+    
+
      // Allow access to the /ai/convertion page regardless of token presence
      if (request.nextUrl.pathname === '/ai/convertion') {
         return NextResponse.next();

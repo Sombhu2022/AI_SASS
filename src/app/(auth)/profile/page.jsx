@@ -22,6 +22,7 @@ const ProfilePage = () => {
     setLoading(true)
     try {
       const res = await axios.get("/api/auth/profile");
+      console.log(res);
       setUser(res.data.data.user);
     } catch (error) {
       console.error("Error fetching profile:", error);
@@ -56,7 +57,7 @@ const ProfilePage = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen ">
-      <div className="bg-gray-700/10 rounded-lg shadow-lg p-8 w-full max-w-lg">
+      <div className=" rounded-lg shadow-lg p-8 w-full max-w-lg">
         {/* Profile Picture */}
         <ImageSection image_url={user?.profile_pic?.url} id={user?._id} />
 

@@ -1,13 +1,29 @@
+"use client"
+import Notify from "@/utils/NotificationManager";
 import { useEffect, useState } from "react";
 
-function MessageAlert({
-  message = " Wellcome to ThinkCraft.ai , your Learning Partner ",
-  type = "success",
-}) {
+function MessageAlert() {
+
   const [customBgColor, setCustomBgColor] = useState("bg-green-500 hover:bg-green-700");
   const [customColor, setCustomColor] = useState("text-green-600");
-  const [isShow, setIsShow] = useState(true);
+  const [message, setMessage] = useState("");
+  const [type, setType] = useState("");
+  const [isShow, setIsShow] = useState(false);
   const [progress, setProgress] = useState(0); // Initially at 0%, will increase
+
+  
+  useEffect(() => {
+    // Register the function to show notification
+      Notify.register((msg, alertType) => {
+      setMessage(msg);
+      setType(alertType);
+      setIsShow(true);
+
+      setProgress(0)
+    });
+  }, []);
+
+
 
   useEffect(() => {
     if (type === "error") {
@@ -31,7 +47,10 @@ function MessageAlert({
     }, 1000); // Increment every second
 
     return () => clearInterval(interval); // Clean up interval on unmount
-  }, [type]);
+  }, [type , message , isShow]);
+
+  // console.log(type , isShow , message);
+
 
   return (
     <>
@@ -64,7 +83,7 @@ function MessageAlert({
                   </button>
                 </div>
                 {/* Custom message */}
-                <p className="text-gray-600 mb-6">{message}</p>
+                <p className={`${customColor} text-gray-600 mb-6`}>{message}</p>
               </div>
             </div>
 

@@ -3,6 +3,7 @@ import axios from "axios";
 import { log } from "pdfmake/build/pdfmake";
 import React, { useEffect, useState, useCallback } from "react";
 import EmailVerifiCationPopup from "./EmailVerifiCationPopup";
+import Notify from "@/utils/NotificationManager";
 
 function TwoStepVerification({ twoStepVerify, id, isVerify }) {
   const [isTwoStepAuth, setIsTwoStepAuth] = useState(false);
@@ -21,7 +22,7 @@ function TwoStepVerification({ twoStepVerify, id, isVerify }) {
     // If the user is not verified, show the email verification popup
     if (!isVerify) {
       setIsEmailVerifyShow(true);
-    } else {
+    } else{
       setLoading(true);
       try {
         // Patch request to update the two-step authentication status if the user is verified
@@ -29,8 +30,11 @@ function TwoStepVerification({ twoStepVerify, id, isVerify }) {
           isTwoStepAuth,
         });
         console.log("Two-Step Authentication Updated:", data);
+        Notify.success(data?.isTwoStepAuth ? 'Two Step Verification is on , that provid extra security .':'ohh ! , Two step verification is off ')
+        // window.location.reload()
       } catch (error) {
         setError("not update your two step verification status");
+        Notify.error(error?.message || 'Something error ! , please Try again')
         console.error("Error updating Two-Step Authentication:", error);
       } finally {
         setLoading(false);
@@ -84,7 +88,7 @@ function TwoStepVerification({ twoStepVerify, id, isVerify }) {
         message={'Please verify your email to enable two-step authentication.'}
         isEmailVerifyShow={isEmailVerifyShow}
         isShowResend={isShowResend}
-        onChangeEmailVerificationShow={(bool)=>setIsEmailVerifyShow(bool)}
+        onChangeEmailVerificationShow={(bool)=>{setIsEmailVerifyShow(bool)}}
         onChangeSowResend={(bool)=>setIsShowResend(bool)}
       />
     </div>

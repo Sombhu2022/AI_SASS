@@ -2,11 +2,17 @@
 
 import PopupMessageBox from '@/components/PopupMessageBox'
 import axios from 'axios'
+import { useRouter } from 'next/navigation'
+
+
+
 import React, { useState } from 'react'
 
 function EmailVerifiCationPopup({ message ,isEmailVerifyShow , isShowResend , onChangeEmailVerificationShow , onChangeSowResend  }) {
     const [loading , setLoading ] = useState(false)
     const [error , setError] = useState('')
+
+    const router = useRouter()
 
     const   heandleVerifyEmailRequest = async()=>{
      
@@ -64,6 +70,8 @@ function EmailVerifiCationPopup({ message ,isEmailVerifyShow , isShowResend , on
         buttonName={ loading? 'loading...':'Resend Verification Request'}
         onButtonClick={heandleVerifyEmailRequest}
         isButtonActive ={ false }
+        onCallBackUrl = {()=>{ 
+         window.location.reload() }}
       />
   
         ):("")

@@ -32,8 +32,12 @@ const userModel = new Schema({
     profile_pic:{
             url:{
                 type:String,
+                default:'https://res.cloudinary.com/dab0ekhmy/image/upload/v1728130610/thik-ai/gvjpvq3xljmnw2vwdkag.avif'
             },
-            public_id:String
+            public_id:{
+                type:String,
+                default:null
+            }
         }
     ,
     role: {
