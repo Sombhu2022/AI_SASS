@@ -21,7 +21,7 @@
     border-color: rgba(0, 0, 0, 0.1);
   }
   50% {
-    border-color: rgba(0, 0, 0, 0.5);
+    border-color: rgba(0, 0, 0, 0.281);
   }
   100% {
     border-color: rgba(0, 0, 0, 0.1);
@@ -30,4 +30,18 @@
 
 .border-blinking {
   animation: blinking-border 1.5s infinite; /* Controls the speed of the blinking effect */
+}
+
+
+@keyframes animate-boredr-spin{
+    0%{
+      
+    }
+    100%{
+      @apply   border-x-transparent
+    }
+}
+
+.animate-boredr-spin{
+  animation: animate-boredr-spin ease-in-out 1.5s infinite;
 }

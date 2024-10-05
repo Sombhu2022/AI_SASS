@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken'
 export const POST = async(request , {params})=>{
   
     const { verifyToken } = params
-    console.log(verifyToken);
+    console.log("" ,verifyToken);
     
     try {
         

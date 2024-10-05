@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { RiRobot3Line } from "react-icons/ri";
 import AuthProviders from "@/components/AuthProviders";
 import OtpVerificationSection from "./_components/OtpVerificationSection";
+import SpinnerLoader from "@/components/SpinnerLoader";
 
 export default function Page() {
   const router = useRouter();
@@ -14,6 +15,8 @@ export default function Page() {
   const [isTwoStepAuth, setIsTwoStepAuth] = useState(false); // Track if 2-step auth is required
   const [authId, setAuthId] = useState(""); // For storing authId after login
   const [remainingTime, setRemainingTime] = useState(300); // Default 5 minutes in seconds
+
+  const [loading , setLoading] = useState(false)
  
 
   const handleSignIn = async (e) => {
@@ -25,6 +28,7 @@ export default function Page() {
     }
 
     try {
+      setLoading(true)
       const response = await axios.post("/api/auth/signin", {
         authId: emailOrUserName,
         password,
@@ -40,11 +44,15 @@ export default function Page() {
         setRemainingTime(Math.floor((expireTime - Date.now()) / 1000)); // Convert to seconds
        
       } else if (response.data.success) {
-        router.push("/dashboard"); // Redirect to dashboard if login is successful
+        console.log('success');
+        router.back(); 
       }
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");
       console.log(err);
+    }
+    finally{
+      setLoading(false)
     }
   };
 
@@ -56,7 +64,7 @@ export default function Page() {
 
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50">
+    <div className="popup-container">
       <div className="relative shadow-lg rounded-lg p-8 max-w-md w-full border border-gray-600 bg-gray-600/10">
         {/* Close button */}
         <button
@@ -99,7 +107,7 @@ export default function Page() {
             {error && <p className="text-red-500 text-sm">{error}</p>}
 
             <button type="submit" className="w-full custom-button">
-              Login
+              {loading ? (<div className="flex gap-3 justify-center items-center">Loading...<SpinnerLoader/></div>):('Login')}
             </button>
           </form>
         ) : (

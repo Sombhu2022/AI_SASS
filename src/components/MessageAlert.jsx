@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
 
 function MessageAlert({
-  message = "Your custom message here",
+  message = " Wellcome to ThinkCraft.ai , your Learning Partner ",
   type = "success",
 }) {
-  const [customBgColor, setCustomBgColor] = useState(
-    "bg-green-500 hover:bg-green-700"
-  );
+  const [customBgColor, setCustomBgColor] = useState("bg-green-500 hover:bg-green-700");
   const [customColor, setCustomColor] = useState("text-green-600");
   const [isShow, setIsShow] = useState(true);
   const [progress, setProgress] = useState(0); // Initially at 0%, will increase
@@ -20,15 +18,15 @@ function MessageAlert({
       setCustomColor("text-orange-600");
     }
 
-    // Start countdown to increase progress bar over 60 seconds
-    const duration = 10; // 1 minute
+    // Start countdown to increase progress bar over 10 seconds
+    const duration = 7; // 10 seconds for demo
     let interval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(interval); // Stop when progress reaches 100%
           setIsShow(false); // Hide popup when progress is complete
         }
-        return prev + (100 / duration); // Increase by 1/60th every second
+        return prev + (100 / duration); // Increase by 1/10th every second
       });
     }, 1000); // Increment every second
 
@@ -38,27 +36,29 @@ function MessageAlert({
   return (
     <>
       {isShow ? (
-        <div className="popup-container-without-blur fixed bottom-0 right-2 z-50">
+        <div className="fixed bottom-2 right-2 z-50">
           <div className="bg-white rounded-md shadow-lg p-2 max-w-md text-center relative">
-            <div className="flex gap-3 mb-3">
-              {/* Logo with blinking border */}
-              <div className="p-1 border-8 border-gray-200 rounded-full border-blinking w-24">
-              <img
-                src="https://res.cloudinary.com/dab0ekhmy/image/upload/v1728065731/thik-ai/i0litri1ulckbyqgq44b.png"
-                alt="Logo"
-                className="w-20 mx-auto border-6 rounded-full mr-5 border-blinking shadow-[0_4px_6px_rgba(0,0,0,0.1),_0_2px_4px_rgba(0,0,0,0.06)]" // Custom shadow              />
-                 />
-
+            <div className="flex gap-3 justify-center items-center mb-3">
+              {/* Outer div with responsive size */}
+              <div className="border-x-2 animate-boredr-spin border-x-pink-600 rounded-full  flex items-center justify-center h-20 w-20 sm:h-24 sm:w-24 md:h-28 md:w-28 lg:h-32 lg:w-32">
+                {/* Inner div with fixed border */}
+                <div className="border-8 border-gray-600/10 rounded-full flex items-center justify-center">
+                  {/* Image with responsive size */}
+                  <img
+                    src="https://res.cloudinary.com/dab0ekhmy/image/upload/v1728065731/thik-ai/i0litri1ulckbyqgq44b.png"
+                    alt="Logo"
+                    className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full border-6 border-gray-800"
+                  />
+                </div>
               </div>
-                 
-              <div>
+
+              <div className="flex-1">
                 {/* Close button */}
                 <div className="flex justify-end">
                   <button
                     onClick={() => {
                       setIsShow(false);
                     }}
-                    className=""
                   >
                     <span className="text-3xl text-black mt-3">&times;</span>
                   </button>

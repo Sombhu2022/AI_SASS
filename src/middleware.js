@@ -1,37 +1,43 @@
 import { NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
 
 export async function middleware(request) {
     console.log("Requesting path:", request.nextUrl.pathname);
     
-    // Check if the user is on the home page (`/`)
-    if (request.nextUrl.pathname === '/') {
+    // Public paths where token authentication is not required
+    const isPublicPath = request.nextUrl.pathname === '/sign-in' || request.nextUrl.pathname === '/sign-up';
+    
+    // Get the token from cookies
+    const token = request.cookies.get('token')?.value || '';
+    
+     // Allow access to the /ai/convertion page regardless of token presence
+     if (request.nextUrl.pathname === '/ai/convertion') {
         return NextResponse.next();
     }
 
-    // Define public paths where token authentication is not required
-    const isPublicPath = request.nextUrl.pathname === '/sign-in' || request.nextUrl.pathname === '/sign-up';
-    
-    // Get token from cookies
-    const token = request.cookies.get('token')?.value || '';
-
-    if (isPublicPath && token) {
-        // Redirect authenticated users away from the sign-in or sign-up page
+    // If the user is authenticated and tries to access public paths (like sign-in or sign-up), redirect them to the home page
+    if (token && isPublicPath) {
         return NextResponse.redirect(new URL('/', request.nextUrl));
     }
+    
 
+    // If the user is not authenticated and tries to access protected paths, redirect them to the sign-in page
     if (!token && !isPublicPath) {
-        // Redirect unauthenticated users to sign-in if trying to access protected pages
         return NextResponse.redirect(new URL('/sign-in', request.nextUrl));
     }
 
-    // Allow access if the token is valid or the user is accessing public paths
+    // Otherwise, allow the request to continue
     return NextResponse.next();
 }
 
-// Config to apply middleware to all pages but exclude static files and API routes
+// Config to apply middleware to relevant pages, excluding static files and API routes
 export const config = {
     matcher: [
-        '/((?!_next/static|_next/image|favicon.ico|assets|api/).*)', // Exclude static files and API routes
+        '/sign-in', 
+        '/sign-up', 
+        '/profile',  
+        '/dashboard',  
+        '/ai/:path*', 
+        '/ai/convertion/:path*', 
+        '/setting'
     ],
 };

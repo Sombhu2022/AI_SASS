@@ -63,7 +63,7 @@ function EmailVerifiCationPopup({ message ,isEmailVerifyShow , isShowResend , on
         note={`If you didn't receive the email, you can request to resend it.`}
         buttonName={ loading? 'loading...':'Resend Verification Request'}
         onButtonClick={heandleVerifyEmailRequest}
-        isButtonActive ={ false}
+        isButtonActive ={ false }
       />
   
         ):("")

@@ -13,7 +13,8 @@ import Loader from "@/components/Loader";
 const ProfilePage = () => {
   const [user, setUser] = useState({});
   const [loading , setLoading] = useState(true)
- 
+  
+
   const router = useRouter();
 
   // Function to fetch the user profile
@@ -36,6 +37,7 @@ const ProfilePage = () => {
 
   const handleLogOut = async () => {
     try {
+      
       const data = await axios.get("/api/auth/logout");
       console.log(data);
       router.push("/");

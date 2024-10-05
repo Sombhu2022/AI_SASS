@@ -23,8 +23,14 @@ export class ApiResponse {
     const response = new ApiResponse(true, message, data);
     const nextResponse = NextResponse.json(response.toJson(), { status: statusCode });
 
+
     // Set cookies if provided
-    cookies.forEach(({ name, value, options }) => {
+    cookies.forEach(({ name, value }) => {
+      const options ={
+         httpOnly : true,
+         sameSite: 'Strict',
+      };
+
       nextResponse.cookies.set(name, value, options);
     });
 
