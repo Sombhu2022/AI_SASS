@@ -1,95 +1,96 @@
 "use client";
 import axios from "axios";
-import { log } from "pdfmake/build/pdfmake";
 import React, { useEffect, useState, useCallback } from "react";
 import EmailVerifiCationPopup from "./EmailVerifiCationPopup";
 import Notify from "@/utils/NotificationManager";
 
 function TwoStepVerification({ twoStepVerify, id, isVerify }) {
-  const [isTwoStepAuth, setIsTwoStepAuth] = useState(false);
+  const [isTwoStepAuth, setIsTwoStepAuth] = useState(twoStepVerify);
+  const [isShowTwoStepAuth, setIsShowTwoStepAuth] = useState(twoStepVerify); 
   const [isEmailVerifyShow, setIsEmailVerifyShow] = useState(false);
   const [isShowResend, setIsShowResend] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  
+  const [hasInteracted, setHasInteracted] = useState(false); 
 
-  useEffect(()=>{
-    setIsTwoStepAuth(twoStepVerify)
-  } , [twoStepVerify])
+  // Update the states on component mount or if the props change
+  useEffect(() => {
+    setIsTwoStepAuth(twoStepVerify);
+    setIsShowTwoStepAuth(twoStepVerify);
+  }, [twoStepVerify]);
 
-  // Function to handle two-step verification toggle
+  // Function to handle the API call to update the two-step authentication status
   const handleTwoStepToggle = useCallback(async () => {
-    // If the user is not verified, show the email verification popup
-    if (!isVerify) {
-      setIsEmailVerifyShow(true);
-    } else{
-      setLoading(true);
-      try {
-        // Patch request to update the two-step authentication status if the user is verified
-        const { data } = await axios.patch(`/api/auth/profile/${id}`, {
-          isTwoStepAuth,
-        });
-        console.log("Two-Step Authentication Updated:", data);
-        Notify.success(data?.isTwoStepAuth ? 'Two Step Verification is on , that provid extra security .':'ohh ! , Two step verification is off ')
-        // window.location.reload()
-      } catch (error) {
-        setError("not update your two step verification status");
-        Notify.error(error?.message || 'Something error ! , please Try again')
-        console.error("Error updating Two-Step Authentication:", error);
-      } finally {
-        setLoading(false);
-      }
+    setLoading(true);
+    try {
+      const { data } = await axios.patch(`/api/auth/profile/${id}`, {
+        isTwoStepAuth,
+      });
+      console.log(data)
+      Notify.success(
+        data?.data.isTwoStepAuth
+          ? "Two-Step Verification is ON, providing extra security."
+          : "Two-Step Verification is OFF."
+      );
+      setIsShowTwoStepAuth(data.data.isTwoStepAuth); // Set the updated value
+    } catch (error) {
+      setError("Failed to update your two-step verification status." , error.response.data.message);
+      const message = "Something went wrong! , please try again";
+      Notify.error(message);
+      console.error("Error updating Two-Step Authentication:", error);
+    } finally {
+      setLoading(false);
     }
-  }, [isVerify, isTwoStepAuth, id]);
+  }, [isTwoStepAuth, id]);
 
-  // Toggle two-step authentication state
+  // Toggle the two-step authentication on button click
   const toggleTwoStepAuth = () => {
-    // Trigger the popup or API request based on the verification status
-    if (isVerify) {
-      setIsTwoStepAuth((prev) => !prev);
+    if (!isVerify) {
+      setIsEmailVerifyShow(true); // Show email verification popup if user is not verified
     } else {
-      setIsEmailVerifyShow(true); // Show the popup if the user is not verified
+      setIsTwoStepAuth((prev) => !prev); // Toggle the state locally
+      setHasInteracted(true)
     }
   };
 
-  // Trigger the two-step toggle effect on state change if user is verified
+  // Trigger the API call when the state changes and it differs from the original `twoStepVerify` value
   useEffect(() => {
-    if (isVerify && isTwoStepAuth !== twoStepVerify) {
-      handleTwoStepToggle();
+    if (isVerify && hasInteracted) {
+      handleTwoStepToggle(); // Call the API only when the user makes changes
     }
-  }, [isTwoStepAuth, handleTwoStepToggle, isVerify, twoStepVerify]);
+  }, [isTwoStepAuth, twoStepVerify, isVerify, handleTwoStepToggle]);
 
   return (
-    <div className="flex justify-evenly items-center mb-6 ">
+    <div className="flex justify-evenly items-center mb-6">
       <span className="text-gray-500 font-medium">Two-Step Verification</span>
 
-      <div className="flex flex-col gap-3  items-end">
+      <div className="flex flex-col gap-3 items-end">
         {/* Toggle Button */}
         <button
           className={`w-12 h-6 relative rounded-full transition-all ${
-            isTwoStepAuth ? "bg-green-500" : "bg-gray-400"
+            isShowTwoStepAuth ? "bg-green-500" : "bg-gray-400"
           }`}
           onClick={toggleTwoStepAuth}
+          disabled={loading} // Disable the button while loading
         >
           <span
             className={`absolute top-1/2 transform -translate-y-1/2 w-4 h-4 bg-white rounded-full transition-transform ${
-              isTwoStepAuth ? "translate-x-[3px]" : "translate-x-[-18px]"
+              isShowTwoStepAuth ? "translate-x-[2px]" : "translate-x-[-18px]"
             }`}
           />
         </button>
         <span className="ml-3 text-sm font-medium text-gray-600">
-          {isTwoStepAuth ? "Enabled" : "Disabled"}
+          {isShowTwoStepAuth ? "Enabled" : "Disabled"}
         </span>
       </div>
 
       {/* Conditional Email Verification Popup */}
-
       <EmailVerifiCationPopup
-        message={'Please verify your email to enable two-step authentication.'}
+        message={"Please verify your email to enable two-step authentication."}
         isEmailVerifyShow={isEmailVerifyShow}
         isShowResend={isShowResend}
-        onChangeEmailVerificationShow={(bool)=>{setIsEmailVerifyShow(bool)}}
-        onChangeSowResend={(bool)=>setIsShowResend(bool)}
+        onChangeEmailVerificationShow={(bool) => setIsEmailVerifyShow(bool)}
+        onChangeSowResend={(bool) => setIsShowResend(bool)}
       />
     </div>
   );

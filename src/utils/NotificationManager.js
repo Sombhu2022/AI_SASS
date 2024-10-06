@@ -6,6 +6,10 @@ const Notify = {
     showNotification = notifyFunc;
   },
 
+  unsubscribe: () => {
+    showNotification = () => {}; // Reset to an empty function
+  },
+
   success: (message) => {
     showNotification(message, "success");
   },

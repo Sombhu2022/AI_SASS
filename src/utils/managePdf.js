@@ -1,11 +1,14 @@
+
 import htmlToPdfmake from "html-to-pdfmake";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 
+import axios from "axios";
+
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 export const createPdfAndDownload =(editorContentHTML)=>{
     try {
         
-        pdfMake.vfs = pdfFonts.pdfMake.vfs;
         const pdfContent = htmlToPdfmake(editorContentHTML);
     
         // Define PDFMake document structure
@@ -27,45 +30,37 @@ export const createPdfAndDownload =(editorContentHTML)=>{
 
 
  //    // Function to save PDF to Cloudinary
-  //    const handleSavePdf = () => {
-  //     // Get HTML content from the Editor
-  //     const editorInstance = editorRef.current.getInstance();
-  //     const editorContentHTML = editorInstance.getHTML();
+   export   const createPdfAndUpload =async (editorContentHTML , fileName ='download.pdf') => {
+   
+   // Convert HTML to a format suitable for PDFMake
+      const pdfContent = htmlToPdfmake(editorContentHTML);
 
-  //     // Convert HTML to a format suitable for PDFMake
-  //     const pdfContent = htmlToPdfmake(editorContentHTML);
+      // Define PDFMake document structure
+      const docDefinition = {
+        content: pdfContent,
+        pageSize: "A4",
+        pageMargins: [40, 60, 40, 60], // [left, top, right, bottom]
+      };
 
-  //     // Define PDFMake document structure
-  //     const docDefinition = {
-  //       content: pdfContent,
-  //       pageSize: "A4",
-  //       pageMargins: [40, 60, 40, 60], // [left, top, right, bottom]
-  //     };
+      // Generate PDF in a Blob format
+      pdfMake.createPdf(docDefinition).getBlob(async (blob) => {
+        // Convert the blob to FormData to send it to Cloudinary
+       console.log('blod' , blob);
+       
+       const data = new FormData();
 
-  //     // Generate PDF in a Blob format
-  //     pdfMake.createPdf(docDefinition).getBlob(async (blob) => {
-  //       // Convert the blob to FormData to send it to Cloudinary
-  //       const formData = new FormData();
-  //       formData.append("file", blob, "document.pdf");
-  //       formData.append("upload_preset", "your_upload_preset"); // Add your Cloudinary upload preset
-  //       formData.append("cloud_name", "your_cloud_name"); // Add your Cloudinary cloud name
+         data.append('file' , blob , fileName)
 
-  //       try {
-  //         // Upload to Cloudinary
-  //         const response = await axios.post(
-  //           "https://api.cloudinary.com/v1_1/your_cloud_name/auto/upload",
-  //           formData
-  //         );
+        try {
+          const res = await axios.post('/api/pdf/create' , data,{
+            headers:{
+             "Content-Type": "multipart/form-data",
+            }
+          } )
 
-  //         console.log("Cloudinary Upload Response:", response.data);
-
-  //         // The URL of the uploaded file
-  //         const uploadedUrl = response.data.secure_url;
-
-  //         // Optionally store this URL somewhere for future use (e.g., in your database)
-  //         console.log("Uploaded PDF URL:", uploadedUrl);
-  //       } catch (error) {
-  //         console.error("Error uploading to Cloudinary:", error);
-  //       }
-  //     });
-  //   };
+          console.log("Cloudinary Upload Response:", res);
+        } catch (error) {
+          console.error("Error uploading to Cloudinary:", error);
+        }
+      });
+    };

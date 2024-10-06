@@ -61,7 +61,7 @@ function Header() {
       icon: <IoSettingsSharp />,
       iconColor: "text-gray-200",
       iconbg: "bg-gray-200/10",
-      link: "/setting",
+      link: "/profile",
     },
   ];
   
