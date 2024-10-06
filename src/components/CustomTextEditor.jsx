@@ -9,7 +9,12 @@ import {
   FaListOl,
   FaPalette,
 } from "react-icons/fa"; // Import necessary icons
-import { createPdfAndDownload } from "@/utils/managePdf";
+import { BsFillCloudDownloadFill } from "react-icons/bs";
+import { MdDownloadDone } from "react-icons/md";
+import { CiBookmarkCheck } from "react-icons/ci";
+import { IoCloudUpload } from "react-icons/io5";
+
+import { createPdfAndDownload, createPdfAndUpload } from "@/utils/managePdf";
 
 const CustomTextEditor = ({
   content = "this is text editor",
@@ -101,6 +106,12 @@ const CustomTextEditor = ({
     const pdf = createPdfAndDownload(editorContentHTML);
   };
 
+  const handleUploadPdf = ()=>{
+    console.info('handle pdf uploader run')
+    const editorContentHTML = editorRef.current.innerHTML;
+    const pdf = createPdfAndUpload(editorContentHTML);
+  }
+
   useEffect(() => {
     // Ensure this only runs on the client
     if (typeof window !== "undefined" && editorRef.current) {
@@ -118,28 +129,28 @@ const CustomTextEditor = ({
           <FaHeading /> H1
         </button> */}
         <button onClick={() => applyFormat("h2")} style={buttonStyle}>
-          <FaHeading /> 
+          <FaHeading />
         </button>
         <button onClick={() => applyFormat("bold")} style={buttonStyle}>
-          <FaBold /> 
+          <FaBold />
         </button>
         <button onClick={() => applyFormat("italic")} style={buttonStyle}>
-          <FaItalic /> 
+          <FaItalic />
         </button>
         <button onClick={() => applyFormat("underline")} style={buttonStyle}>
-          <u>U</u> 
+          <u>U</u>
         </button>
         <button
           onClick={() => applyFormat("foreColor", "red")}
           style={buttonStyle}
         >
-          <FaPalette className="text-red-600"/> 
+          <FaPalette className="text-red-600" />
         </button>
         <button
           onClick={() => applyFormat("foreColor", "blue")}
           style={buttonStyle}
         >
-          <FaPalette className="text-blue-600"/> 
+          <FaPalette className="text-blue-600" />
         </button>
         <button
           onClick={() => applyFormat("insertUnorderedList")}
@@ -159,18 +170,44 @@ const CustomTextEditor = ({
         <button onClick={() => applyFormat("redo")} style={buttonStyle}>
           Redo
         </button> */}
-        <button
-          onClick={updateMarkdown}
-          className="px-5 py-2 rounded-md bg-blue-600 hover:bg-blue-800 text-white self-end"
-        >
-          Save
-        </button>
-        <button
-          onClick={handleDownloadPdf}
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
-        >
-          Download PDF
-        </button>
+        <div className="relative group">
+          <button
+            onClick={updateMarkdown}
+            className="bg-blue-600/10 text-blue-700 px-4 py-2 rounded hover:bg-blue-700 hover:text-white"
+          >
+            <CiBookmarkCheck />
+          </button>
+          {/* Tooltip */}
+          <span className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-700 text-white text-xs rounded py-1 px-2">
+            Save file data
+          </span>
+        </div>
+
+        <div className="relative group">
+          <button
+            onClick={handleDownloadPdf}
+            className="bg-blue-600/10 text-blue-700 px-4 py-2 rounded hover:bg-blue-700 hover:text-white"
+          >
+            <BsFillCloudDownloadFill />
+          </button>
+          {/* Tooltip */}
+          <span className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-700 text-white text-xs rounded py-1 px-2">
+            Download as PDF
+          </span>
+        </div>
+
+        <div className="relative group">
+          <button
+            onClick={handleUploadPdf}
+            className="bg-blue-600/10 text-blue-700 px-4 py-2 rounded hover:bg-blue-700 hover:text-white"
+          >
+            <IoCloudUpload />
+          </button>
+          {/* Tooltip */}
+          <span className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-700 text-white text-xs rounded py-1 px-2">
+            Upload as PDF
+          </span>
+        </div>
       </div>
 
       <div

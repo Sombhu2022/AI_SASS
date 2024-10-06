@@ -23,20 +23,9 @@ export const PATCH = async(req , {params})=>{
             return ApiError.send('two fatcor authenticate is false , You are Unauthorised !' , 400)
         }
 
-        // check email and userName exist or not 
-        // const email = inputData?.email || ''
-        // if(email){
-        //     const findUser = await Users.findOne({email})
-        //     if(findUser){
-        //         return ApiError.send('UserName already Exist ! , please try another UserName')
-        //     }
-        // }
-
-        // const userName 
-
 
         // update user profile 
-        const user = await Users.findByIdAndUpdate(id , {$set:inputData} , {new:true})
+        const user = await Users.findByIdAndUpdate(id , {$set:inputData} , {new:true}).select('-password')
 
         // check user 
         if(!user){

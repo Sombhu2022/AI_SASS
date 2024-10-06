@@ -35,7 +35,7 @@ function UserEmailAndName({userName , email , id , isVerify}) {
           setEditEmail(false);
           window.location.reload()
       } catch (error) {
-        Notify.error(error.message || 'profile not update')
+        Notify.error(error.response.data.message || 'profile not update')
         console.error("Error updating email:", error);
       }
       finally{
@@ -58,7 +58,8 @@ function UserEmailAndName({userName , email , id , isVerify}) {
          setEditUsername(false);
          window.location.reload()
      } catch (error) {
-      Notify.error(error.message || 'Your Profile Not Update')
+      Notify.error(error.response.data.message || 'profile not update')
+
        console.error("Error updating username:", error);
      }
      finally{

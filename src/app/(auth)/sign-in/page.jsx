@@ -16,8 +16,7 @@ export default function Page() {
   const [authId, setAuthId] = useState(""); // For storing authId after login
   const [remainingTime, setRemainingTime] = useState(300); // Default 5 minutes in seconds
 
-  const [loading , setLoading] = useState(false)
- 
+  const [loading, setLoading] = useState(false);
 
   const handleSignIn = async (e) => {
     e.preventDefault();
@@ -28,40 +27,35 @@ export default function Page() {
     }
 
     try {
-      setLoading(true)
+      setLoading(true);
       const response = await axios.post("/api/auth/signin", {
         authId: emailOrUserName,
         password,
       });
       console.log(response);
-      
 
       if (response.data.success && response.data?.data?.isTwoStepAuth) {
         setIsTwoStepAuth(true);
         setAuthId(emailOrUserName); // Store the authId for OTP submission
 
-        const expireTime =response.data.otpExpireTime || Date.now() + 5 * 60 * 1000; // 5 minutes from now
+        const expireTime =
+          response.data.otpExpireTime || Date.now() + 5 * 60 * 1000; // 5 minutes from now
         setRemainingTime(Math.floor((expireTime - Date.now()) / 1000)); // Convert to seconds
-       
       } else if (response.data.success) {
-        console.log('success');
-        router.back(); 
+        console.log("success");
+        router.push('/dashboard');
       }
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");
       console.log(err);
-    }
-    finally{
-      setLoading(false)
+    } finally {
+      setLoading(false);
     }
   };
 
-
- 
   const handleClose = () => {
     router.back();
   };
-
 
   return (
     <div className="popup-container">
@@ -107,26 +101,31 @@ export default function Page() {
             {error && <p className="text-red-500 text-sm">{error}</p>}
 
             <button type="submit" className="w-full custom-button">
-              {loading ? (<div className="flex gap-3 justify-center items-center">Loading...<SpinnerLoader/></div>):('Login')}
+              {loading ? (
+                <div className="flex gap-3 justify-center items-center">
+                  Loading...
+                  <SpinnerLoader />
+                </div>
+              ) : (
+                "Login"
+              )}
             </button>
+            <p className="mt-4 text-center text-sm text-gray-500">
+              Don't have an account?{" "}
+              <a href="/sign-up" className="text-indigo-600 hover:underline">
+                Sign up
+              </a>
+            </p>
+
+            <br />
+
+            {/* Oauth providers */}
+            <AuthProviders />
           </form>
         ) : (
-          // otp verification section 
-            <OtpVerificationSection timer={remainingTime} authId={authId}  />
+          // otp verification section
+          <OtpVerificationSection timer={remainingTime} authId={authId} />
         )}
-
-        <p className="mt-4 text-center text-sm text-gray-500">
-          Don't have an account?{" "}
-          <a href="/sign-up" className="text-indigo-600 hover:underline">
-            Sign up
-          </a>
-        </p>
-
-       <br />
-
-       {/* Oauth providers */}
-       <AuthProviders/>
-
       </div>
     </div>
   );

@@ -20,15 +20,7 @@ export default function SignUp() {
   const [error, setError] = useState("");
   const [loading , setLoading] = useState(false)
 
-  const fileHandle = async (e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.onload = () => {
-      setImage(reader.result);
-    };
-    reader.readAsDataURL(file);
-  };
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -54,7 +46,7 @@ export default function SignUp() {
       console.log(response);
 
       if (response.data.success) {
-        router.push("/ai/convertion");
+        router.push("/profile");
       }
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed");
