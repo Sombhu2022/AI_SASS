@@ -14,6 +14,7 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { IoMdClose } from "react-icons/io";
 
 import { useState } from "react";
+import { useRouter } from 'next/navigation';
 
 
 
@@ -66,6 +67,7 @@ function Header() {
   ];
   
   const [isOpen, setIsOpen] = useState(false);
+  const route = useRouter()
 
   return (
     <header className="header">
@@ -83,6 +85,7 @@ function Header() {
     <div className="md:hidden flex items-center gap-2">
       
        {/* profile section */}
+
 
       </div>
 
@@ -114,17 +117,30 @@ function Header() {
         isOpen ? "block" : "hidden"
       } `}
     >
+      <div className={`flex flex-col gap-5 ${isOpen? 'popup-container justify-center items-start':''}`}>
+       {
+        isOpen&&(
+         <button
+         onClick={()=>setIsOpen(false)}
+         className="absolute top-2 right-2 text-gray-400 hover:text-gray-600 focus:outline-none"
+         >
+         <span className="text-3xl text-white mt-3">&times;</span>
+       </button>
+        )
+       }
+      
       {links.map((ele, index) => (
         <Link
           href={ele.link}
           key={index}
           className="flex gap-2 items-center p-2 text-gray-400 hover:bg-slate-500/10 hover:text-white"
-        
+          onClick={()=>setIsOpen(false)}
         >
           <b className={`${ele.iconbg} ${ele.iconColor} p-2 rounded-md`}> {ele.icon} </b>
           <span > {ele.name} </span>
         </Link>
       ))}
+      </div>
     </nav>
   </header>
   )

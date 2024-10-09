@@ -1,4 +1,5 @@
 "use client"
+import SpinnerLoader from '@/components/SpinnerLoader';
 import axios from 'axios';
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from 'react'
@@ -8,6 +9,7 @@ function OtpVerificationSection({timer , authId }) {
   const [otp, setOtp] = useState(""); // For OTP verification
   const [remainingTime, setRemainingTime] = useState(timer); // Default 5 minutes in seconds
   const [error, setError] = useState("");
+  const [loading , setLoading ] = useState(false)
 
   
   const router = useRouter()
@@ -45,6 +47,7 @@ function OtpVerificationSection({timer , authId }) {
         }
     
         try {
+          setLoading(true)
           const response = await axios.post("/api/auth/verify-otp", {
             authId,
             otp,
@@ -58,6 +61,9 @@ function OtpVerificationSection({timer , authId }) {
         } catch (err) {
           setError(err.response?.data?.message || "OTP verification failed");
           console.log(err);
+        }
+        finally{
+          setLoading(false)
         }
       };
 
@@ -119,7 +125,7 @@ function OtpVerificationSection({timer , authId }) {
       className="w-full custom-button"
       disabled={remainingTime <= 0}
     >
-      Verify OTP
+      {loading?(<div className='flex justify-center items-center gap-3'>Loading...<SpinnerLoader/></div>):'Verify OTP'}
     </button>
   </form>
   )

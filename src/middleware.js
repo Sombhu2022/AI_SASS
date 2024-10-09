@@ -19,15 +19,20 @@ export async function middleware(request) {
 
     // If the user is authenticated and tries to access public paths (like sign-in or sign-up), redirect them to the home page
     if (token && isPublicPath) {
+        console.log('token and public url here');
+        
         return NextResponse.redirect(new URL('/', request.nextUrl));
     }
     
 
     // If the user is not authenticated and tries to access protected paths, redirect them to the sign-in page
     if (!token && !isPublicPath) {
+        console.log('no token not public url');
+        
         return NextResponse.redirect(new URL('/sign-in', request.nextUrl));
     }
-
+    console.log('is public url not , or token not');
+    
     // Otherwise, allow the request to continue
     return NextResponse.next();
 }

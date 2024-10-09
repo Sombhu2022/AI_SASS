@@ -25,8 +25,8 @@ export default function RootLayout({ children }) {
           <MessageAlert/>
           <Header/>
 
-        
-          <div className="hidden ml-64 md:flex justify-between border bg-gray-700/10 border-gray-700 rounded-md p-5">
+         {/* nav section */}
+          <div className="hidden ml-64 md:flex justify-between border bg-gray-700/10 border-gray-700 rounded-md p-5 mb-8">
 
          <h2 className="px-3 py-1 bg-yellow-300/10 rounded-full text-yellow-300 "> Beta version</h2>
         
