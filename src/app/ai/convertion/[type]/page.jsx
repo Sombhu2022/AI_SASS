@@ -44,7 +44,7 @@ function Page() {
     
 
     try {
-      if (updatePrompt) {
+      if (updatePrompt && prompt) {
         setLoading(true);
         const { data } = await axios.post("/api/ai/convertion", {
           prompt: updatePrompt,

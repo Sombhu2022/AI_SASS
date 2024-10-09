@@ -19,7 +19,7 @@ const PdfSchema = new Schema({
 
 
 const storageModel = new Schema({
-    user_id: {
+    userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: [true, "User not found!"],

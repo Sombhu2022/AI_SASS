@@ -1,3 +1,4 @@
+import SpinnerLoader from "@/components/SpinnerLoader";
 import React, { useEffect, useState } from "react";
 
 function FormSection({ allFields , onPrompt , isContineu , res , isLoading}) {
@@ -46,8 +47,8 @@ function FormSection({ allFields , onPrompt , isContineu , res , isLoading}) {
        className={`${isLoading? "bg-blue-600/5 text-blue-600 hover:bg-blue-600/10 hover:text-blue-600 ":" bg-blue-600 hover:bg-blue-700 text-white"} px-5 font-semibold py-3 rounded-lg transition-colors duration-300`}
        onClick={submitHandle}
       >
-        {!isLoading? contineu?"Continue":"Generate" : "loading..."}
-       
+        {!isLoading? contineu?"Continue":"Generate" : (<div className='flex justify-center items-center gap-3'>Loading...<SpinnerLoader/></div>)}
+
       </button>
       {
         contineu&&(

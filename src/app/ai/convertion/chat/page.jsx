@@ -10,12 +10,14 @@ import MarkDownTextFormater from '@/components/MarkDownTextFormater';
 function page() {
     const [prompt, setPrompt] = useState("");
     const [messages, setMessages] = useState([]); // Initial empty array
+    const [loading , setLoading] = useState(false)
  
   
     const handleSubmit = async (e) => {
       e.preventDefault();
       try {
         if (prompt) {
+          setLoading(true)
           const { data } = await axios.post("/api/ai/convertion", { prompt });
 
           // Update messages directly
@@ -29,6 +31,8 @@ function page() {
         }
       } catch (error) {
         console.log(error);
+      }finally{
+        setLoading(false)
       }
     };
 
@@ -80,7 +84,7 @@ function page() {
             type="submit"
             className="mt-3 md:mt-0 md:ml-5 px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-all"
           >
-            Ask
+                 {loading?(<div className='flex justify-center items-center gap-3'>Loading...<SpinnerLoader/></div>):'Ask'}
           </button>
         </form>
       </div>

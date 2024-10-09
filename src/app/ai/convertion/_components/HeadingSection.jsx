@@ -3,7 +3,7 @@ import { LuMessageSquare } from "react-icons/lu";
 
 function HeadingSection() {
   return (
-   <div className=" heading-section ">
+   <div className=" heading-section border-none justify-center ">
    <LuMessageSquare className="text-blue-600 bg-blue-600/15 rounded-lg p-5 text-7xl" />
    <div className="flex flex-col gap-3 text-center md:text-left">
      <h1 className="text-xl md:text-2xl font-semibold text-gray-200">
