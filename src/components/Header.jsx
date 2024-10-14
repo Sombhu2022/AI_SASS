@@ -70,7 +70,7 @@ function Header() {
   const route = useRouter()
 
   return (
-    <header className="header">
+    <header className="header ">
 
       <div className='flex justify-between w-full'>
 
@@ -114,7 +114,7 @@ function Header() {
     {/* Sidebar for larger screens */}
     <nav
       className={`${
-        isOpen ? "block" : "hidden"
+        isOpen ? "block " : "hidden"
       } `}
     >
       <div className={`flex flex-col gap-5 ${isOpen? 'popup-container justify-center items-start':''}`}>

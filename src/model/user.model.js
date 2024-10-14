@@ -2,6 +2,29 @@ import  { Schema, models, model } from "mongoose"
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
+
+const totalGenarateModel = new Schema({
+         pdf:{
+            type:Number,
+            default:0
+         } ,
+         image:{
+            type: Number,
+            default:0
+         } ,
+         code:{
+            type:Number ,
+            default:0
+         } ,
+         
+         video:{
+            type:Number ,
+            default:0
+         }
+         
+ },{_id:false})
+
+
 const userModel = new Schema({
     userName:{
         type:String,
@@ -70,6 +93,7 @@ const userModel = new Schema({
       type:Boolean,
       default:true 
     },
+    totalGenarate: totalGenarateModel,
 
     isPrimeMember:{
        type:Boolean,
