@@ -9,6 +9,7 @@ import FormSection from "./_components/FormSection";
 import axios from "axios";
 import MyEditor from "@/components/MyEditor";
 import CustomTextEditor from "@/components/CustomTextEditor";
+import Notify from "@/utils/NotificationManager";
 
 
 
@@ -62,6 +63,8 @@ function Page() {
     } catch (error) {
       console.log(error);
       setLoading(false);
+      Notify.error(error.status == 500?'Network Error ! , Check Your Internet Connection... ':error?.response?.data?.message);  
+     
     }
   };
 

@@ -15,6 +15,8 @@ import { CiBookmarkCheck } from "react-icons/ci";
 import { IoCloudUpload } from "react-icons/io5";
 
 import { createPdfAndDownload, createPdfAndUpload } from "@/utils/managePdf";
+import axios from "axios";
+import Notify from "@/utils/NotificationManager";
 
 const CustomTextEditor = ({
   content = "this is text editor",
@@ -101,9 +103,19 @@ const CustomTextEditor = ({
     //     .replace(/<li>/g , '<li style="margin-left:20px;" >')
   };
 
-  const handleDownloadPdf = () => {
+  const handleDownloadPdf = async() => {
     const editorContentHTML = editorRef.current.innerHTML;
     const pdf = createPdfAndDownload(editorContentHTML);
+    try {
+       const data = await axios.post('/api/genarate' , {type:'pdf'})
+       console.log(data);
+       
+       Notify.success(data.message)
+    } catch (error) {
+      console.log(error);
+      
+       Notify.error('somting error')
+    }
   };
 
   const handleUploadPdf = ()=>{

@@ -45,3 +45,9 @@
     @apply ml-64 p-6;
   }
 }
+
+@media(max-width:600px) {
+  .header{
+    @apply sticky top-0 bg-gray-600/15 backdrop-blur-sm
+  }
+}
