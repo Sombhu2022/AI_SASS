@@ -110,7 +110,7 @@ const CustomTextEditor = ({
        const data = await axios.post('/api/genarate' , {type:'pdf'})
        console.log(data);
        
-       Notify.success(data.message)
+       Notify.success(data.data.message)
     } catch (error) {
       console.log(error);
       

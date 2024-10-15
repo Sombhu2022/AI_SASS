@@ -46,8 +46,9 @@
   }
 }
 
-@media(max-width:600px) {
+@media(max-width:768px) {
   .header{
-    @apply sticky top-0 bg-gray-600/15 backdrop-blur-sm
+    @apply  sticky top-0 backdrop-blur-sm bg-gray-700/10
   }
+  
 }

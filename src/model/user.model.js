@@ -93,7 +93,26 @@ const userModel = new Schema({
       type:Boolean,
       default:true 
     },
-    totalGenarate: totalGenarateModel,
+    totalGenarate: {
+        pdf:{
+           type:Number,
+           default:0
+        } ,
+        image:{
+           type: Number,
+           default:0
+        } ,
+        code:{
+           type:Number ,
+           default:0
+        } ,
+        
+        video:{
+           type:Number ,
+           default:0
+        }
+        
+},
 
     isPrimeMember:{
        type:Boolean,
