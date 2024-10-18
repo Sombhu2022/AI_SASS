@@ -32,7 +32,7 @@ export default function Page() {
         authId: emailOrUserName,
         password,
       });
-      console.log(response);
+      // console.log(response);
 
       if (response.data.success && response.data?.data?.isTwoStepAuth) {
         setIsTwoStepAuth(true);
@@ -43,7 +43,7 @@ export default function Page() {
         setRemainingTime(Math.floor((expireTime - Date.now()) / 1000)); // Convert to seconds
       } else if (response.data.success) {
         console.log("success");
-        router.push('/dashboard');
+        router.push('/');
       }
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");
