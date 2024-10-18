@@ -43,10 +43,10 @@ export default function SignUp() {
         "/api/auth/signup",
         JSON.stringify(data)
       );
-      console.log(response);
+      // console.log(response);
 
       if (response.data.success) {
-        router.push("/profile");
+        router.push("/");
       }
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed");
