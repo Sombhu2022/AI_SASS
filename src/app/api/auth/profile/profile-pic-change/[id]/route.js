@@ -40,7 +40,7 @@ export const POST = async(req ,{params})=>{
        console.error(isDelete?'file deleted':'file not delete!')
 
        // step4: upload new image 
-        const { url , public_id , error} = await fileUploader(image)
+        const { url , public_id , error} = await fileUploader(image )
         console.log(url);
         
         if(error){

@@ -3,39 +3,77 @@ import mongoose, { model, models, Schema } from "mongoose"
 
 const offerShema = new Schema({
     pdf:{
-        type:Number,
-        default:0
+        exist:{
+            type:Number,
+            default:10
+        },
+        capacity:{
+            type:Number,
+            default:10
+        }
     },
     video:{
-        type:Number,
-        default:0
+        exist:{
+            type:Number,
+            default:10
+        },
+        capacity:{
+            type:Number,
+            default:10
+        }
     },
     image:{
-        type:Number,
-        default:0
+        exist:{
+            type:Number,
+            default:10
+        },
+        capacity:{
+            type:Number,
+            default:10
+        }
+    },
+    code:{
+        exist:{
+            type:Number,
+            default:10
+        },
+        capacity:{
+            type:Number,
+            default:10
+        }
     }
 } , {_id: false})
 
 const primeSchema = new Schema({
-    user_id:{
+    userId:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"User",
         required:[true , "user not found !"]
     },
-    prime_type:{
+    primeType:{
         type:"string",
         required:[true , "prime type required"],
-        enum:["monthly" , "yearly", "sixMonth"]
+        enum:['free' , 'basic' , 'pro' , 'enterprise']
     },
-    prime_start:{
+    primeStart:{
         type:Date,
-        required:true
+        required:true,
+        default:Date.now()
     },
-    prime_expire:{
+    primeExpire:{
         type:Date,
-        required:true
+        required:true,
+        default:Date.now()
     },
-    offers:[ offerShema ]
+    offers: offerShema ,
+    discount :{
+        type:Number,
+        default:0
+    },
+    ammount:{
+       type:Number,
+       default:0
+    }
 
 }, {timestamps:true})
 

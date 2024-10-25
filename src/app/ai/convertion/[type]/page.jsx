@@ -1,17 +1,17 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState , Suspense } from "react";
 
 import { contentTypeData } from "@/data/convertionContentType";
 import FormSection from "./_components/FormSection";
 
 import axios from "axios";
 import MyEditor from "@/components/MyEditor";
-import CustomTextEditor from "@/components/CustomTextEditor";
+// import CustomTextEditor from "@/components/CustomTextEditor";
 import Notify from "@/utils/NotificationManager";
 
-
+const CustomTextEditor = React.lazy(()=> import('@/components/CustomTextEditor'))
 
 
 function Page() {
@@ -52,7 +52,9 @@ function Page() {
         });
 
         // Update messages directly
-        const res = data?.data;
+        const res = data?.data.data;
+        console.log(res);
+        
         if (res) {
           setResponse(response + res);
         }
@@ -97,11 +99,14 @@ function Page() {
         />
       </div>
 
-      {/*  output section */}
-      <div className="rounded-md bg-white md:max-w-[50vw] max-w-full">
-        {/* <MyEditor content={response} handleContextChange={handleChangeAiRes}/> */}
-        <CustomTextEditor content={response} handleContextChange={handleChangeAiRes} />
-      </div>
+       {/*  output section */}
+        <Suspense fallback={<p className="align-middle text-white" >Loading...</p>}>
+          <div className="rounded-md bg-white md:max-w-[50vw] max-w-full">
+           {/* <MyEditor content={response} handleContextChange={handleChangeAiRes}/> */}
+           <CustomTextEditor content={response} handleContextChange={handleChangeAiRes} />
+          </div>
+        </Suspense>
+
     </section>
   );
 }

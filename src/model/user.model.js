@@ -3,28 +3,6 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
 
-const totalGenarateModel = new Schema({
-         pdf:{
-            type:Number,
-            default:0
-         } ,
-         image:{
-            type: Number,
-            default:0
-         } ,
-         code:{
-            type:Number ,
-            default:0
-         } ,
-         
-         video:{
-            type:Number ,
-            default:0
-         }
-         
- },{_id:false})
-
-
 const userModel = new Schema({
     userName:{
         type:String,
@@ -87,36 +65,6 @@ const userModel = new Schema({
     createWith:{
        type:String,
        default:"emailAndPassword"
-    },
-
-    isFree:{
-      type:Boolean,
-      default:true 
-    },
-    totalGenarate: {
-        pdf:{
-           type:Number,
-           default:0
-        } ,
-        image:{
-           type: Number,
-           default:0
-        } ,
-        code:{
-           type:Number ,
-           default:0
-        } ,
-        
-        video:{
-           type:Number ,
-           default:0
-        }
-        
-},
-
-    isPrimeMember:{
-       type:Boolean,
-       default:false
     },
     
     verifyToken: String,
