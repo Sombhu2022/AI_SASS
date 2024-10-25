@@ -14,6 +14,7 @@ export async function middleware(request) {
 
      // Allow access to the /ai/convertion page regardless of token presence
      if (request.nextUrl.pathname === '/ai/convertion') {
+        console.info('ai/convertion path select')
         return NextResponse.next();
     }
 
@@ -31,8 +32,7 @@ export async function middleware(request) {
         
         return NextResponse.redirect(new URL('/sign-in', request.nextUrl));
     }
-    console.log('is public url not , or token not');
-    
+     
     // Otherwise, allow the request to continue
     return NextResponse.next();
 }
@@ -44,7 +44,7 @@ export const config = {
         '/sign-up', 
         '/profile',  
         '/dashboard',  
-        '/ai/:path*', 
+        '/ai/:path*',
         '/ai/convertion/:path*', 
         '/setting'
     ],

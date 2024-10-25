@@ -117,7 +117,7 @@ function Header() {
         isOpen ? "block " : "hidden"
       } `}
     >
-      <div className={`nav-inner  ${isOpen? ' popup-container h-[100vh] w-[100vw]  ':''}`}>
+      <div className={`nav-inner  ${isOpen? ' popup-container h-[100vh] w-[100vw] ':''}`}>
 
       <div className={`flex flex-col gap-5 ${isOpen? ' justify-center  border border-gray-600 bg-gray-900 p-5 shadow-md rounded-md ':''}`}>
        {

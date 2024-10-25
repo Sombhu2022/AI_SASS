@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import axios from "axios";
 import MarkDownTextFormater from '@/components/MarkDownTextFormater';
+import SpinnerLoader from '@/components/SpinnerLoader';
 
 
 
@@ -23,7 +24,7 @@ function page() {
           // Update messages directly
           console.log("ai response",data);
           
-          const newMessage = { you: prompt, Ai: data?.data };
+          const newMessage = { you: prompt, Ai: data?.data.data };
           setMessages([...messages, newMessage]);
   
           // Clear prompt after submission
@@ -43,7 +44,7 @@ function page() {
         <h2 className="text-gray-500 text-xl mb-5">Conversation Section</h2>
          
         {/* Show Messages Section */}
-        <div className="p-4 rounded-md mb-6 max-h-[70vh] overflow-y-auto">
+        <div className="p-4 rounded-md mb-6 h-[50vh]  overflow-y-auto">
           {messages.length > 0 ? (
             messages.map((msg, index) => (
               <div key={index} className="mb-4 flex flex-col gap-3">
@@ -84,7 +85,7 @@ function page() {
             type="submit"
             className="mt-3 md:mt-0 md:ml-5 px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-all"
           >
-                 {loading?(<div className='flex justify-center items-center gap-3'>Loading...<SpinnerLoader/></div>):'Ask'}
+                 {loading?(<div className='flex justify-center items-center gap-3'><SpinnerLoader/></div>):'Ask'}
           </button>
         </form>
       </div>

@@ -1,4 +1,5 @@
 import { dbConnect } from "@/db/dbConnection"
+import { Primes } from "@/model/prime.model"
 import { Users } from "@/model/user.model"
 import { ApiError, ApiResponse } from "@/utils/customResponse"
 import { fileUploader } from "@/utils/imageUpload"
@@ -42,10 +43,25 @@ export const POST = async(req)=>{
         // genarate cookice
         const token = user.generateToken()
         // const token = 123445
+        // console.log(user);
         
         // save user
         await user.save()
+ 
 
+        const data = await Primes({
+            userId: user._id,
+            primeType:'free',
+            primeStart:Date.now(),
+            offers:{
+                pdf:{capacity:10 , exist:10},
+                code:{capacity:10 , exist:10},
+                video:{capacity:10 , exist:10},
+                image:{capacity:10 , exist:10}
+            }
+        })
+        console.log(data);
+        await data.save()
         // send registration mail
         const isSend = await sendEmail(email , "register success" , " you have succesfully register") 
         if(!isSend){

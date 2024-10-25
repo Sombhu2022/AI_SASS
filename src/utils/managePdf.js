@@ -50,9 +50,13 @@ export const createPdfAndDownload =(editorContentHTML)=>{
        const data = new FormData();
 
          data.append('file' , blob , fileName)
+         data.append('fileName' , fileName)
+        
+         console.log('all daat ' , data);
+         
 
         try {
-          const res = await axios.post('/api/pdf/create' , data,{
+          const res = await axios.post('/api/pdf' , JSON.stringify(data) ,{
             headers:{
              "Content-Type": "multipart/form-data",
             }

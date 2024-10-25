@@ -64,21 +64,22 @@ function TwoStepVerification({ twoStepVerify, id, isVerify }) {
     <div className="flex justify-evenly items-center mb-6">
       <span className="text-gray-500 font-medium">Two-Step Verification</span>
 
-      <div className="flex flex-col gap-3 items-end">
+      <div className="flex flex-col gap-3 items-end ">
         {/* Toggle Button */}
-        <button
-          className={`w-12 h-6 relative rounded-full transition-all ${
+        <div
+          className={`w-12 h-6 py-[4px]   rounded-full transition-all ${
             isShowTwoStepAuth ? "bg-green-500" : "bg-gray-400"
           }`}
           onClick={toggleTwoStepAuth}
           disabled={loading} // Disable the button while loading
         >
-          <span
-            className={`absolute top-1/2 transform -translate-y-1/2 w-4 h-4 bg-white rounded-full transition-transform ${
-              isShowTwoStepAuth ? "translate-x-[2px]" : "translate-x-[-18px]"
+          <div
+            className={` w-4 h-4 bg-white rounded-full transition-transform ${
+              isShowTwoStepAuth ? "ml-[26px]" : "ml-[6px]"
             }`}
-          />
-        </button>
+          ></div>
+          
+        </div>
         <span className="ml-3 text-sm font-medium text-gray-600">
           {isShowTwoStepAuth ? "Enabled" : "Disabled"}
         </span>
