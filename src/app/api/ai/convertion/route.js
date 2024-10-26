@@ -41,7 +41,7 @@ export const POST = async (req) => {
 
 
     if(prime.offers?.pdf?.exist < 1){
-      return ApiError.send('Sorry Free limit are used ! get Prime Version')
+      return ApiError.send('Sorry Free limit are used ! get Prime Version', 400)
     }
 
     if (!prompt) return ApiError.send('please input valid prompt')

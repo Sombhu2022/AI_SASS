@@ -2,9 +2,9 @@ import { dbConnect } from "@/db/dbConnection";
 import { getUserDetails } from "@/helpers/getUserDetails";
 import { Storages } from "@/model/storage.model";
 import { ApiError, ApiResponse } from "@/utils/customResponse";
-import { fileUploader } from "@/utils/imageUpload";
-import fs from 'fs';
-import path from 'path';
+import { bufferFileUploader, fileUploader } from "@/utils/imageUpload";
+// import fs from 'fs';
+// import path from 'path';
 
 export const POST = async (req) => {
   try {
@@ -23,22 +23,24 @@ export const POST = async (req) => {
     if (!userId) return ApiError.send('User not authenticated');
 
     // 4. Convert markdown data to text file in a custom folder
-    const customFolderPath = path.join(process.cwd(), 'upload');
-    if (!fs.existsSync(customFolderPath)) {
-      fs.mkdirSync(customFolderPath);
-    }
-    const filePath = path.join(customFolderPath, `${fileName}.txt`);
-    fs.writeFileSync(filePath, markdownData);
+    // const customFolderPath = path.join(process.cwd(), 'upload');
+    // if (!fs.existsSync(customFolderPath)) {
+    //   fs.mkdirSync(customFolderPath);
+    // }
+    // const filePath = path.join(customFolderPath, `${fileName}.txt`);
+    // fs.writeFileSync(filePath, markdownData);
 
-    // 5. Upload text file to Cloudinary
-    const { url, public_id, error } = await fileUploader(filePath, 'text');
+    // // 5. Upload text file to Cloudinary
+    // const { url, public_id, error } = await fileUploader(filePath, 'text');
+    const { url, public_id, error } = await bufferFileUploader(Buffer.from(markdownData , 'utf-8'));
     if (error) {
-      fs.unlinkSync(filePath);
+    //   fs.unlinkSync(filePath);
       return ApiError.send('Error during file upload to Cloudinary');
     }
 
-    // 6. Remove the temporary file after upload
-    fs.unlinkSync(filePath);
+    // // 6. Remove the temporary file after upload
+    // fs.unlinkSync(filePath);
+
 
     // 7. Store the uploaded file’s information
     const tempFile = {

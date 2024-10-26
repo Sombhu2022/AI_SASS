@@ -44,19 +44,18 @@ function page() {
       try {
         if (true) {
           // setLoading(true)
-          const { data } = await axios.post("/api/storage", {markdownData:messages[0]?.Ai , fileName });
+          const { data } = await axios.post("/api/storage", {markdownData:messages , fileName });
 
           // Update messages directly
-          console.log("ai response",data);
+          // console.log("ai response",data);
           
-          // const newMessage = { you: prompt, Ai: data?.data.data };
-          // setMessages([...messages, newMessage]);
-  
-          // // Clear prompt after submission
-          // setPrompt("");d
+         const markdata =await axios.get(data.data.storage.files[11].url)
+         console.log("markdata",markdata);
+          
+         
         }
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }finally{
         // setLoading(false)
       }
@@ -112,9 +111,13 @@ function page() {
           >
                  {loading?(<div className='flex justify-center items-center gap-3'><SpinnerLoader/></div>):'Ask'}
           </button>
-          <button onClick={()=>setIsSave(true)}>save</button>
+          {/* save button , if we wand to save data  */}
+          {/* <button onClick={()=>setIsSave(true)}>save</button> */}
         </form>
       </div>
+
+
+      {/* message save popup box */}
       {
         isSave&& (<div className="popup-container">
           <div className=" bg-white rounded-lg shadow-lg pt-3 pb-8 p-5 max-w-md text-center">

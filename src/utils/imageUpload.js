@@ -37,3 +37,38 @@ export const fileDestroy = async( file_path )=>{
   return false
 
 }
+
+
+
+/**
+ * fileUploader function to upload in-memory data to Cloudinary
+ * @param {Buffer} fileBuffer - The buffer data to upload
+ * @param {String} fileName - Name or identifier for the file
+ * @returns {Object} - The URL, public_id of the uploaded file, or an error message
+ */
+export const bufferFileUploader = async (fileBuffer) => {
+  try {
+    // Upload to Cloudinary from the buffer
+    const result = await new Promise((resolve, reject) => {
+      cloudinary.uploader.upload_stream(
+        { resource_type: "raw", folder: 'thik-ai' }, 
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        }
+      ).end(fileBuffer);
+    });
+
+    return {
+      url: result.secure_url,
+      public_id: result.public_id,
+      error: null,
+    };
+  } catch (error) {
+    return {
+      url: null,
+      public_id: null,
+      error: error.message,
+    };
+  }
+};
