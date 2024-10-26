@@ -42,7 +42,7 @@ const offerShema = new Schema({
             default:10
         }
     }
-} , {_id: false})
+})
 
 const primeSchema = new Schema({
     userId:{

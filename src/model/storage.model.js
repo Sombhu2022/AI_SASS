@@ -1,15 +1,15 @@
 import mongoose, { model, models, Schema } from "mongoose";
 
 // Sub-schema for storing individual PDF details
-const PdfSchema = new Schema({
+const fileSchema = new Schema({
     name: {
         type: String,
-        required: [true, "PDF name is required"], 
+        required: [true, "file name is required"], 
         trim: true, 
     },
     url: {
         type: String,
-        required: [true, "PDF URL is required"],
+        required: [true, "file URL is required"],
     },
     public_id: {
         type: String,
@@ -25,13 +25,13 @@ const storageModel = new Schema({
         required: [true, "User not found!"],
         index: true, // Index for faster queries by user_id
     },
-    pdfs: [PdfSchema], 
+    files: [fileSchema], 
     
-    totalPdf:{
+    totalFile:{
         type:Number,
         default:0
     }
 }, { timestamps: true }); 
 
 
-export const Storage = models.Storage || model('Storage', storageModel);
+export const Storages = models.Storages || model('Storages', storageModel);

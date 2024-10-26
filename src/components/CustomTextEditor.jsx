@@ -17,6 +17,7 @@ import { IoCloudUpload } from "react-icons/io5";
 import { createPdfAndDownload, createPdfAndUpload } from "@/utils/managePdf";
 import axios from "axios";
 import Notify from "@/utils/NotificationManager";
+import SpinnerLoader from "./SpinnerLoader";
 
 const CustomTextEditor = ({
   content = "this is text editor",
@@ -25,6 +26,11 @@ const CustomTextEditor = ({
   const editorRef = useRef(null);
 
   const [markdown, setMarkdown] = useState("");
+  const [isSave, setIsSave] = useState(false);
+  const [fileName, setFileName] = useState("");
+  const [loading , setLoading] = useState(false)
+
+
 
   useEffect(() => {
     setMarkdown(content);
@@ -54,12 +60,17 @@ const CustomTextEditor = ({
     updateMarkdown(); // Update markdown content
   };
 
+
+
   const updateMarkdown = () => {
     const content = editorRef.current.innerHTML;
     const markdown = htmlToMarkdown(content);
     setMarkdown(markdown);
     handleContextChange(markdown);
   };
+
+
+
 
   const htmlToMarkdown = (html) => {
     return html
@@ -81,6 +92,8 @@ const CustomTextEditor = ({
       );
   };
 
+
+
   const handleLinkClick = (event) => {
     const target = event.target;
     if (target.tagName === "A") {
@@ -88,6 +101,8 @@ const CustomTextEditor = ({
       window.open(target.href, "_blank"); // Open link in a new tab
     }
   };
+
+
 
   const markdownToHtml = (markdown) => {
     // Convert Markdown to HTML
@@ -103,26 +118,53 @@ const CustomTextEditor = ({
     //     .replace(/<li>/g , '<li style="margin-left:20px;" >')
   };
 
-  const handleDownloadPdf = async() => {
+
+
+  const handleDownloadPdf = async () => {
     const editorContentHTML = editorRef.current.innerHTML;
     const pdf = createPdfAndDownload(editorContentHTML);
     try {
-       const data = await axios.post('/api/genarate' , {type:'pdf'})
-       console.log(data);
-       
-       Notify.success(data.data.message)
+      const data = await axios.post("/api/genarate", { type: "pdf" });
+      console.log(data);
+
+      Notify.success(data.data.message);
     } catch (error) {
       console.log(error);
-      
-       Notify.error('somting error')
+
+      Notify.error("somting error");
     }
   };
 
-  const handleUploadPdf = ()=>{
-    console.info('handle pdf uploader run')
-    const editorContentHTML = editorRef.current.innerHTML;
-    const pdf = createPdfAndUpload(editorContentHTML);
-  }
+
+
+  const handleUploadPdf = async(e) => {
+    e.preventDefault();
+    console.info("handle pdf uploader run");
+    try {
+      const editorContentHTML = editorRef.current.innerHTML;
+      if (editorContentHTML && fileName) {
+        setLoading(true)
+        const { data } = await axios.post("/api/storage", {markdownData:editorContentHTML , fileName });
+
+        // Update messages directly
+        // console.log("ai response",data);
+        
+      //  const markdata =await axios.get(data.data.storage.files[data.data.storage.files.length - 1].url)
+      //  console.log("markdata",markdata);
+        
+       
+      }
+    } catch (error) {
+      console.error(error);
+    }finally{
+      setLoading(false)
+      setIsSave(false)
+    }
+      
+  };
+  
+
+
 
   useEffect(() => {
     // Ensure this only runs on the client
@@ -135,7 +177,50 @@ const CustomTextEditor = ({
   console.log(marked(markdown));
 
   return (
-    <div className="max-w-[600px] mx-0 my-auto p-7 bg-white text-black rounded-sm">
+    <div className="max-w-[700px] mx-0 my-auto p-7 bg-white text-black rounded-sm">
+
+      <div className="flex gap-4">
+        <div className="relative group">
+          <button
+            onClick={updateMarkdown}
+            className="bg-blue-600/10 text-blue-700 px-4 py-2 rounded hover:bg-blue-700 hover:text-white flex gap-2 items-center"
+          >
+            <CiBookmarkCheck /> Save Text
+          </button>
+          {/* Tooltip */}
+          <span className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-700 text-white text-xs rounded py-1 px-2">
+            Save file data
+          </span>
+        </div>
+
+        <div className="relative group">
+          <button
+            onClick={handleDownloadPdf}
+            className="bg-blue-600/10 text-blue-700 px-4 py-2 rounded hover:bg-blue-700 hover:text-white flex gap-2 items-center"
+          >
+            <BsFillCloudDownloadFill /> Download
+          </button>
+          {/* Tooltip */}
+          <span className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-700 text-white text-xs rounded py-1 px-2">
+            Download as PDF
+          </span>
+        </div>
+
+        <div className="relative group">
+          <button
+            onClick={()=>setIsSave(true)}
+            className="bg-blue-600/10 text-blue-700 px-4 py-2 rounded hover:bg-blue-700 hover:text-white flex gap-2 items-center"
+          >
+            <IoCloudUpload /> Upload
+          </button>
+          {/* Tooltip */}
+          <span className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-700 text-white text-xs rounded py-1 px-2">
+            Upload as PDF
+          </span>
+        </div>
+      </div>
+
+
       <div className="controls flex flex-wrap gap-1 mb-4">
         {/* <button onClick={() => applyFormat("h1")} style={buttonStyle}>
           <FaHeading /> H1
@@ -182,44 +267,6 @@ const CustomTextEditor = ({
         <button onClick={() => applyFormat("redo")} style={buttonStyle}>
           Redo
         </button> */}
-        <div className="relative group">
-          <button
-            onClick={updateMarkdown}
-            className="bg-blue-600/10 text-blue-700 px-4 py-2 rounded hover:bg-blue-700 hover:text-white"
-          >
-            <CiBookmarkCheck />
-          </button>
-          {/* Tooltip */}
-          <span className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-700 text-white text-xs rounded py-1 px-2">
-            Save file data
-          </span>
-        </div>
-
-        <div className="relative group">
-          <button
-            onClick={handleDownloadPdf}
-            className="bg-blue-600/10 text-blue-700 px-4 py-2 rounded hover:bg-blue-700 hover:text-white"
-          >
-            <BsFillCloudDownloadFill />
-          </button>
-          {/* Tooltip */}
-          <span className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-700 text-white text-xs rounded py-1 px-2">
-            Download as PDF
-          </span>
-        </div>
-
-        <div className="relative group">
-          <button
-            onClick={handleUploadPdf}
-            className="bg-blue-600/10 text-blue-700 px-4 py-2 rounded hover:bg-blue-700 hover:text-white"
-          >
-            <IoCloudUpload />
-          </button>
-          {/* Tooltip */}
-          <span className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-700 text-white text-xs rounded py-1 px-2">
-            Upload as PDF
-          </span>
-        </div>
       </div>
 
       <div
@@ -232,6 +279,42 @@ const CustomTextEditor = ({
       ></div>
       {/* <h3>Markdown Output:</h3>
       <pre className='text-black'>{markdown}</pre> */}
+
+      {isSave && (
+        <div className="popup-container">
+          <div className=" bg-white rounded-lg shadow-lg pt-3 pb-8 p-5 max-w-md text-center">
+            {/* Close button */}
+            <div className="flex justify-end ">
+              <button onClick={() => setIsSave(false)} className="">
+                <span className="text-3xl text-black mt-3">&times;</span>
+              </button>
+            </div>
+
+            <img
+              src="https://res.cloudinary.com/dab0ekhmy/image/upload/v1727896191/thik-ai/m4edgpbovwz7efpt9xxp.png"
+              alt="Success"
+              className="w-24 mx-auto mb-6"
+            />
+            <h2 className="text-black p-5">Please enter topic Name </h2>
+            <form action="" className="p-5">
+              <input
+                type="text"
+                className="custom-input  text-black"
+                placeholder="Topic Name "
+                onChange={(e) => setFileName(e.target.value)}
+                name="fileName"
+                required
+              />
+              <button
+                onClick={handleUploadPdf}
+                className={`custom-button mt-7 `}
+              >
+                {loading?(<SpinnerLoader/>):'Save'}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
