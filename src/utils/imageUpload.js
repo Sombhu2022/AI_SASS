@@ -5,7 +5,7 @@ export const fileUploader = async (file , type='image')=>{
 
   const options = {
     folder: 'thik-ai',
-    ...(type === 'pdf' && { resource_type: 'raw' }), // Use spread operator for cleaner code
+    ...(type === 'text' && { resource_type: 'raw' }), // Use spread operator for cleaner code
   };
 
     try {

@@ -12,7 +12,8 @@ function page() {
     const [prompt, setPrompt] = useState("");
     const [messages, setMessages] = useState([]); // Initial empty array
     const [loading , setLoading] = useState(false)
- 
+    const [isSave , setIsSave] = useState(false)
+    const [fileName , setFileName] = useState('')
   
     const handleSubmit = async (e) => {
       e.preventDefault();
@@ -36,6 +37,30 @@ function page() {
         setLoading(false)
       }
     };
+
+
+    const handleClick =async(e)=>{
+      e.preventDefault();
+      try {
+        if (true) {
+          // setLoading(true)
+          const { data } = await axios.post("/api/storage", {markdownData:messages[0]?.Ai , fileName });
+
+          // Update messages directly
+          console.log("ai response",data);
+          
+          // const newMessage = { you: prompt, Ai: data?.data.data };
+          // setMessages([...messages, newMessage]);
+  
+          // // Clear prompt after submission
+          // setPrompt("");d
+        }
+      } catch (error) {
+        console.log(error);
+      }finally{
+        // setLoading(false)
+      }
+    }
 
   return (
     <section className='flex justify-center items-center'>
@@ -87,8 +112,41 @@ function page() {
           >
                  {loading?(<div className='flex justify-center items-center gap-3'><SpinnerLoader/></div>):'Ask'}
           </button>
+          <button onClick={()=>setIsSave(true)}>save</button>
         </form>
       </div>
+      {
+        isSave&& (<div className="popup-container">
+          <div className=" bg-white rounded-lg shadow-lg pt-3 pb-8 p-5 max-w-md text-center">
+            {/* Close button */}
+            <div className="flex justify-end ">
+              <button
+                onClick={()=>setIsSave(false)}
+                className=""
+              >
+                <span className="text-3xl text-black mt-3">&times;</span>
+              </button>
+            </div>
+    
+            <img
+              src="https://res.cloudinary.com/dab0ekhmy/image/upload/v1727896191/thik-ai/m4edgpbovwz7efpt9xxp.png"
+              alt="Success"
+              className="w-24 mx-auto mb-6"
+            />
+            <h2 className='text-black p-5'>Please enter file Name </h2>
+           <form action="" className='p-5'>
+            <input type="text" className='custom-input  text-black' placeholder='File Name ' onChange={(e)=>setFileName(e.target.value)} name="fileName" required/>
+            <button
+              onClick={handleClick}
+              className={`custom-button mt-7 `}
+            >
+             Save
+            </button>
+            </form> 
+           
+          </div>
+        </div>)
+      }
     </section>
   )
 }
