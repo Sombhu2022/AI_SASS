@@ -53,7 +53,7 @@ function Page() {
 
         // Update messages directly
         const res = data?.data.data;
-        console.log(res);
+        // console.log(res);
         
         if (res) {
           setResponse(response + res);

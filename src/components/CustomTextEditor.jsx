@@ -145,7 +145,7 @@ const CustomTextEditor = ({
       if (editorContentHTML && fileName) {
         setLoading(true)
         const { data } = await axios.post("/api/storage", {markdownData:editorContentHTML , fileName });
-
+        Notify.success(data.message || 'file upload success , please check your deshboard !')
         // Update messages directly
         // console.log("ai response",data);
         
@@ -156,6 +156,7 @@ const CustomTextEditor = ({
       }
     } catch (error) {
       console.error(error);
+      Notify.error(error.response.data.message || 'somthing error file not uploaded')
     }finally{
       setLoading(false)
       setIsSave(false)
@@ -174,7 +175,7 @@ const CustomTextEditor = ({
     }
   }, [markdown]);
 
-  console.log(marked(markdown));
+  // console.log(marked(markdown));
 
   return (
     <div className="max-w-[700px] mx-0 my-auto p-7 bg-white text-black rounded-sm">
