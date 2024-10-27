@@ -1,12 +1,39 @@
 'use client'
-import React from 'react';
+import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import Link from 'next/link';
+import axios from 'axios';
+import Loader from '@/components/Loader';
+import SpinnerLoader from '@/components/SpinnerLoader';
+const  AllPdfTable = React.lazy(()=>import('./_components/AllPdfTable'))
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 function Dashboard() {
+  const [allData , setAllData] = useState([])
+  const [loading , setLoading] = useState(false)
+
+  useEffect(()=>{
+    fetchData()
+  },[])
+
+  const fetchData = async()=>{
+    try {
+      setLoading(true)
+      const res = await axios.get('/api/storage')
+      console.info("response",res)
+      setAllData(res.data.data.data)
+    } catch (error) {
+      console.error('some error ' , error)
+    }
+    finally{
+      setLoading(false)
+    }
+}
+
+console.log(allData);
+
   // Sample data for the generated PDFs and plan limit
   const pdfFiles = [
     { id: 1, name: "Project Report 1", date: "2024-09-10" },
@@ -42,6 +69,8 @@ function Dashboard() {
       <div className="bg-white shadow-lg rounded-lg w-full max-w-3xl p-6">
         <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">User Dashboard</h1>
         
+        {loading && (<Loader/>)}
+
         {/* Package Info Section */}
         <div className="mb-6">
           <h2 className="text-xl font-semibold text-gray-700">Current Package</h2>
@@ -55,18 +84,10 @@ function Dashboard() {
         </div>
 
         {/* PDF Files Section */}
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold text-gray-700 mb-4">Generated PDFs</h2>
-          <ul className="bg-gray-50 p-4 rounded-lg">
-            {pdfFiles.map((pdf) => (
-              <li key={pdf.id} className="flex justify-between items-center p-2 border-b border-gray-200">
-                <span className='text-black'>{pdf.name}</span>
-                <span className="text-gray-500">{pdf.date}</span>
-                <button className="text-blue-500 hover:underline">View</button>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <Suspense fallback={<div className='flex items-center justify-center gap-2 text-black'>loading ...<SpinnerLoader/></div>}>
+
+        <AllPdfTable files={allData}/>
+        </Suspense>
 
         {/* Pie Chart Representation Section */}
         <div className="mb-6">
