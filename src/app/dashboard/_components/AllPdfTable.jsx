@@ -10,6 +10,7 @@ function AllPdfTable({ files = [] }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const router = useRouter();
+  
   const itemsPerPage = 5;
 
   console.log("all pdf files", allPdfFiles);
@@ -50,6 +51,8 @@ function AllPdfTable({ files = [] }) {
   };
 
   const deleteHandle = async (id) => {
+    const isDelete = window.confirm('are you sure to delete this file ?')
+    if(!isDelete) return
     try {
       if (id) {
         const res = await axios.delete(`/api/storage/${id}`);
