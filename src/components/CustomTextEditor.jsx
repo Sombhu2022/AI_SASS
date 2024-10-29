@@ -22,6 +22,10 @@ import SpinnerLoader from "./SpinnerLoader";
 const CustomTextEditor = ({
   content = "this is text editor",
   handleContextChange,
+  isEdit = false,
+  documentName = 'Document',
+  onRefresh = false,
+  fileId = ''
 }) => {
   const editorRef = useRef(null);
 
@@ -35,6 +39,10 @@ const CustomTextEditor = ({
   useEffect(() => {
     setMarkdown(content);
   }, [content]);
+
+  useEffect(()=>{
+    setFileName(documentName)
+  }, [documentName])
 
   const applyFormat = (command, value = null) => {
     const selection = window.getSelection();
@@ -123,16 +131,6 @@ const CustomTextEditor = ({
   const handleDownloadPdf = async () => {
     const editorContentHTML = editorRef.current.innerHTML;
     const pdf = createPdfAndDownload(editorContentHTML);
-    try {
-      const data = await axios.post("/api/genarate", { type: "pdf" });
-      console.log(data);
-
-      Notify.success(data.data.message);
-    } catch (error) {
-      console.log(error);
-
-      Notify.error("somting error");
-    }
   };
 
 
@@ -165,6 +163,30 @@ const CustomTextEditor = ({
   };
   
 
+  const handleUpdate =async(e)=>{
+    e.preventDefault()
+    console.log('update file function run');
+    try {
+      const editorContentHTML = editorRef.current.innerHTML;
+      if (editorContentHTML && fileName) {
+        setLoading(true)
+        const { data } = await axios.patch(`/api/storage/${fileId}`, {markdownData:editorContentHTML , fileName });
+        Notify.success(data.message || 'file update success , please check your deshboard !')
+        if(onRefresh){
+          onRefresh()
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      Notify.error(error.response.data.message || 'somthing error file not uploaded')
+    }finally{
+      setLoading(false)
+      setIsSave(false)
+    }
+    
+    
+  }
+
 
 
   useEffect(() => {
@@ -180,6 +202,8 @@ const CustomTextEditor = ({
   return (
     <div className="max-w-[700px] mx-0 my-auto p-7 bg-white text-black rounded-sm">
 
+      <div className="flex flex-wrap gap-3 justify-between items-center border-b pb-3 border-b-gray-300">
+      <p className="font-bold text-gray-700">{documentName}</p>
       <div className="flex gap-4">
         <div className="relative group">
           <button
@@ -212,13 +236,14 @@ const CustomTextEditor = ({
             onClick={()=>setIsSave(true)}
             className="bg-blue-600/10 text-blue-700 px-4 py-2 rounded hover:bg-blue-700 hover:text-white flex gap-2 items-center"
           >
-            <IoCloudUpload /> Upload
+            <IoCloudUpload /> {isEdit?"Update":"Upload"}
           </button>
           {/* Tooltip */}
           <span className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-700 text-white text-xs rounded py-1 px-2">
-            Upload as PDF
+            {isEdit?'Update Your Existing Document':'Upload as PDF'}
           </span>
         </div>
+      </div>
       </div>
 
 
@@ -281,6 +306,9 @@ const CustomTextEditor = ({
       {/* <h3>Markdown Output:</h3>
       <pre className='text-black'>{markdown}</pre> */}
 
+
+
+     {/* for upload pdf popup box */}
       {isSave && (
         <div className="popup-container">
           <div className=" bg-white rounded-lg shadow-lg pt-3 pb-8 p-5 max-w-md text-center">
@@ -305,12 +333,13 @@ const CustomTextEditor = ({
                 onChange={(e) => setFileName(e.target.value)}
                 name="fileName"
                 required
+                value={fileName}
               />
               <button
-                onClick={handleUploadPdf}
+                onClick={isEdit? handleUpdate : handleUploadPdf}
                 className={`custom-button mt-7 `}
               >
-                {loading?(<SpinnerLoader/>):'Save'}
+                {loading?(<SpinnerLoader/>):isEdit?"update":'Save'}
               </button>
             </form>
           </div>
