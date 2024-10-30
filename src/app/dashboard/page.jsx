@@ -16,6 +16,16 @@ function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [prime, setPrime] = useState('');
   const [selectedFeature, setSelectedFeature] = useState('pdf'); // Default to 'pdf'
+  
+
+  const features = [
+    '10 free requests with PDF generation',
+    'Generate 10 code snippets',
+    'Create 10 videos',
+    'Generate 10 images',
+    'Access to basic dashboard'
+];
+
 
   useEffect(() => {
     fetchData();
@@ -74,8 +84,17 @@ function Dashboard() {
         {/* Package Info Section */}
         <div className="mb-6">
           <h2 className="text-xl font-semibold text-gray-700">Current Package</h2>
-          <p className="text-gray-600">Standard Plan</p>
-          <p className="text-gray-500">Access to basic features, 5 projects, and standard support.</p>
+          <p className="text-green-600 p-3 rounded-full bg-green-600/10 w-40 flex justify-center items-center">Free Pack</p>
+          <p className="text-gray-500">Access to basic features</p>
+
+          <ul className="mb-6">
+              {features.map((feature, idx) => (
+                <li key={idx} className="text-gray-600 mb-2 flex items-center">
+                  <span className="mr-2 text-blue-500">✔</span> {feature}
+                </li>
+              ))}
+            </ul>
+
           <Link href={'/prime'}>
             <button className="mt-4 w-44 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded transition duration-200">
               Upgrade Package
