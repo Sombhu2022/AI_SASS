@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { FaImage } from "react-icons/fa";
@@ -7,6 +7,9 @@ import { RiRobot3Line } from "react-icons/ri";
 import Image from "next/image";
 import AuthProviders from "@/components/AuthProviders";
 import SpinnerLoader from "@/components/SpinnerLoader";
+import { useDispatch, useSelector } from "react-redux";
+import { createUser } from "@/store/user/userController";
+import { resetState } from "@/store/user/userSlice";
 
 
 
@@ -18,8 +21,10 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [image, setImage] = useState("");
   const [error, setError] = useState("");
-  const [loading , setLoading] = useState(false)
 
+
+  const dispatch = useDispatch()
+  const { user , loading ,status , message} = useSelector((state)=> state.user)
   
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,26 +41,38 @@ export default function SignUp() {
       password,
     };
 
-    try {
-      setError("")
-      setLoading(true)
-      const response = await axios.post(
-        "/api/auth/signup",
-        JSON.stringify(data)
-      );
-      console.log(response);
+    dispatch(createUser(data))
+    // try {
+    //   setError("")
+    //   setLoading(true)
+    //   const response = await axios.post(
+    //     "/api/auth/signup",
+    //     JSON.stringify(data)
+    //   );
+    //   console.log(response);
 
-      if (response.data.success) {
-        router.push("/profile");
-      }
-    } catch (err) {
-      setError(err.response?.data?.message || "Registration failed");
-      console.log(err);
-    }finally{
-      setLoading(false)
-    }
+    //   if (response.data.success) {
+    //     router.push("/profile");
+    //   }
+    // } catch (err) {
+    //   setError(err.response?.data?.message || "Registration failed");
+    //   console.log(err);
+    // }finally{
+    //   setLoading(false)
+    // }
 
   };
+
+  useEffect(()=>{
+      if(status.createUser === 'success'){
+        router.push('/profile')
+      } else if(status.createUser === 'rejected'){
+        setError(message)
+      }
+      return()=>{
+        dispatch(resetState())
+      }
+  },[status])
 
 
   // Close the modal and navigate back to the previous page
@@ -130,7 +147,7 @@ export default function SignUp() {
           {error && <p className="text-red-500 text-sm">{error}</p>}
 
           <button type="submit" className="w-full custom-button mt-10">
-            {loading?(<div className="flex gap-2 justify-center items-center">Loading... <SpinnerLoader/></div>):("Register")}
+            {loading.createLoading ?(<div className="flex gap-2 justify-center items-center">Loading... <SpinnerLoader/></div>):("Register")}
           </button>
         </form>
         <p className="mt-4 text-center text-sm text-gray-500">

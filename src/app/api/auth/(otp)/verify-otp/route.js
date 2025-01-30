@@ -64,7 +64,7 @@ export const POST = async (req) => {
                 value:token
             }
         ]
-       return ApiResponse.send( "Login successful", {success : true}, 200 , cookies);
+       return ApiResponse.send( "Login successful", {success : true , user}, 200 , cookies);
    
     } catch (error) {
         console.error(error); // Log the error for debugging

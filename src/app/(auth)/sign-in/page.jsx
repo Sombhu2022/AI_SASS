@@ -6,17 +6,24 @@ import { RiRobot3Line } from "react-icons/ri";
 import AuthProviders from "@/components/AuthProviders";
 import OtpVerificationSection from "./_components/OtpVerificationSection";
 import SpinnerLoader from "@/components/SpinnerLoader";
+import { useDispatch, useSelector } from "react-redux";
+import { LoginUser } from "@/store/user/userController";
+import Notify from "@/utils/NotificationManager";
+import { resetState } from "@/store/user/userSlice";
 
 export default function Page() {
   const router = useRouter();
   const [emailOrUserName, setEmailOrUserName] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [isTwoStepAuth, setIsTwoStepAuth] = useState(false); // Track if 2-step auth is required
+ 
   const [authId, setAuthId] = useState(""); // For storing authId after login
   const [remainingTime, setRemainingTime] = useState(300); // Default 5 minutes in seconds
 
-  const [loading, setLoading] = useState(false);
+ 
+
+  const dispatch = useDispatch()
+  const { user , loading , message , status , isTwoStepAuth } = useSelector((state)=> state.user)
 
   const handleSignIn = async (e) => {
     e.preventDefault();
@@ -26,32 +33,36 @@ export default function Page() {
       return;
     }
 
-    try {
-      setLoading(true);
-      const response = await axios.post("/api/auth/signin", {
-        authId: emailOrUserName,
-        password,
-      });
-      console.log(response);
+    dispatch(LoginUser({authId:emailOrUserName , password}))
+  };
 
-      if (response.data.success && response.data?.data?.isTwoStepAuth) {
-        setIsTwoStepAuth(true);
+
+  useEffect(()=>{
+
+        if (status.loginUser === 'success' && isTwoStepAuth) {
+        
         setAuthId(emailOrUserName); // Store the authId for OTP submission
 
         const expireTime =
-          response.data.otpExpireTime || Date.now() + 5 * 60 * 1000; // 5 minutes from now
-        setRemainingTime(Math.floor((expireTime - Date.now()) / 1000)); // Convert to seconds
-      } else if (response.data.success) {
+          user.otpExpireTime || Date.now() + 5 * 60 * 1000; // 5 minutes from now
+          setRemainingTime(Math.floor((expireTime - Date.now()) / 1000)); // Convert to seconds
+      } else if (status.loginUser === 'success') {
         console.log("success");
         router.push('/dashboard');
-      }
-    } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
-      console.log(err);
-    } finally {
-      setLoading(false);
+      
+    }else if(status.loginUser === 'rejected'){
+       Notify.error(message)
+       setError(message)
     }
-  };
+
+    return()=>{
+      dispatch(resetState())
+    }
+  },[status , user])
+
+  useEffect(()=>{
+
+  },[])
 
   const handleClose = () => {
     router.back();
@@ -101,7 +112,7 @@ export default function Page() {
             {error && <p className="text-red-500 text-sm">{error}</p>}
 
             <button type="submit" className="w-full custom-button">
-              {loading ? (
+              {loading.loginLoading ? (
                 <div className="flex gap-3 justify-center items-center">
                   Loading...
                   <SpinnerLoader />

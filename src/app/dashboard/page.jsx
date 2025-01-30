@@ -115,7 +115,7 @@ function Dashboard() {
 
             {/* Feature Buttons */}
         <div className="flex justify-start  mt-6">
-          {['pdf', 'code', 'image', 'video'].map((feature) => (
+          {['req' ,'pdf', 'code', 'image', 'video'].map((feature) => (
             <button
               key={feature}
               className={`px-4 py-2 rounded ${selectedFeature === feature ? ' text-blue-700 bg-gray-100 ' : ' text-gray-800'}`}

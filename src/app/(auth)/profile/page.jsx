@@ -7,49 +7,28 @@ import ImageSection from "./_components/ImageSection";
 import UserEmailAndName from "./_components/UserEmailAndName";
 import TwoStepVerification from "./_components/TwoStepVerification";
 import Loader from "@/components/Loader";
+import { useDispatch, useSelector } from "react-redux";
+import { LogoutUser } from "@/store/user/userController";
+
 
 
 
 const ProfilePage = () => {
-  const [user, setUser] = useState({});
-  const [loading , setLoading] = useState(true)
+ 
   
-
+  const dispatch = useDispatch()
+  const { user , loading , message , status }= useSelector((state)=> state.user)
+  
   const router = useRouter();
 
-  // Function to fetch the user profile
-  const fetchUserProfile = async () => {
-    setLoading(true)
-    try {
-      const res = await axios.get("/api/auth/profile");
-      console.log(res);
-      setUser(res.data.data.user);
-    } catch (error) {
-      console.error("Error fetching profile:", error);
-    }
-    finally{
-      setLoading(false)
-    }
-  };
 
   useEffect(() => {
-    fetchUserProfile();
-  }, []);
+    if(status.logoutUser === 'success') router.push('/')
+  }, [status]);
 
   const handleLogOut = async () => {
-    try {
-      
-      const data = await axios.get("/api/auth/logout");
-      console.log(data);
-      router.push("/");
-    } catch (error) {
-      console.log(error);
-    }
+      dispatch(LogoutUser())
   };
-
-  if(loading){
-    return(<Loader message="Fetch User ..."/> )
-  }
 
   const handleCustom = (value) => {
     alert(value);
@@ -105,7 +84,7 @@ const ProfilePage = () => {
             onClick={handleLogOut}
             className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md"
           >
-            Logout
+           {loading.logoutLoading?"loading ..." :'Logout'}
           </button>
         </div>
       </div>

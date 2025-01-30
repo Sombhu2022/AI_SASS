@@ -1,5 +1,5 @@
-"use client"
-import React from 'react'
+"use client";
+import React, { useEffect } from "react";
 import Link from "next/link";
 // import { ClerkProvider, SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 
@@ -14,13 +14,10 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { IoMdClose } from "react-icons/io";
 
 import { useState } from "react";
-import { useRouter } from 'next/navigation';
-
-
-
+import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
 
 function Header() {
-
   const links = [
     {
       name: "Dashboard",
@@ -65,88 +62,95 @@ function Header() {
       link: "/profile",
     },
   ];
-  
+
   const [isOpen, setIsOpen] = useState(false);
-  const route = useRouter()
+  const route = useRouter();
+
+  const { user, isAuthenticated, message } = useSelector((state) => state.user);
 
   return (
     <header className="header ">
+      <div className="flex justify-between w-full">
+        <h1 className="flex gap-3 items-center ">
+          <RiRobot3Line className="text-pink-600 text-3xl rounded-md" />
+          <span> ThinkCraft.ai </span>
+        </h1>
 
-      <div className='flex justify-between w-full'>
+        <div className="flex justify-between gap-5">
+          {/* Mobile Authentication Section */}
+          <div className="md:hidden flex items-center gap-2 text-white">
+            {/* profile section */}
+            {isAuthenticated ? (
+              <Link href={"/profile"}>
+                <img
+                  src={user?.profile_pic?.url}
+                  className="h-6 w-6 rounded-full"
+                />
+              </Link>
+            ) : (
+              <Link
+                href={"/sign-in"}
+                className="rounded-md hover:text-white hover:bg-slate-600 bg-white text-black py-2 px-5"
+              >
+                Login
+              </Link>
+            )}
+          </div>
 
-      <h1 className="flex gap-3 items-center ">
-      <RiRobot3Line className="text-pink-600 text-3xl rounded-md" /> 
-      <span> ThinkCraft.ai </span>
-    </h1>
-
-     <div className='flex justify-between gap-5' >
-
-     {/* Mobile Authentication Section */}
-    <div className="md:hidden flex items-center gap-2">
-      
-       {/* profile section */}
-
-
+          {/* Hamburger Menu */}
+          <div className="md:hidden flex ">
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="text-white focus:outline-none"
+            >
+              {isOpen ? <IoMdClose /> : <RxHamburgerMenu />}
+            </button>
+          </div>
+        </div>
       </div>
 
-    {/* Hamburger Menu */}
-    <div className="md:hidden flex ">
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="text-white focus:outline-none"
-      >
-        {
-          isOpen? <IoMdClose/>:<RxHamburgerMenu/>
-        }
-        
-        
-      </button>
-    </div>
-
-     </div>
-
-  
-      
-      </div>
-    
-    
-
-    {/* Sidebar for larger screens */}
-    <nav
-      className={`${
-        isOpen ? "block " : "hidden"
-      } `}
-    >
-      <div className={`nav-inner  ${isOpen? ' popup-container h-[100vh] w-[100vw] ':''}`}>
-
-      <div className={`flex flex-col gap-5 ${isOpen? ' justify-center  border border-gray-600 bg-gray-900 p-5 shadow-md rounded-md ':''}`}>
-       {
-        isOpen&&(
-         <button
-         onClick={()=>setIsOpen(false)}
-         className="mr-3 text-gray-400 hover:text-gray-600 focus:outline-none"
-         >
-         <span className="text-3xl text-white mt-3">&times;</span>
-       </button>
-        )
-       }
-      
-      {links.map((ele, index) => (
-        <Link
-          href={ele.link}
-          key={index}
-          className="flex gap-2 items-center p-2 text-gray-400 hover:bg-slate-500/10 hover:text-white"
-          onClick={()=>setIsOpen(false)}
+      {/* Sidebar for larger screens */}
+      <nav className={`${isOpen ? "block " : "hidden"} `}>
+        <div
+          className={`nav-inner  ${
+            isOpen ? " popup-container h-[100vh] w-[100vw] " : ""
+          }`}
         >
-          <b className={`${ele.iconbg} ${ele.iconColor} p-2 rounded-md`}> {ele.icon} </b>
-          <span > {ele.name} </span>
-        </Link>
-      ))}
-      </div>
-      </div>
-    </nav>
-  </header>
-  )
+          <div
+            className={`flex flex-col gap-5 ${
+              isOpen
+                ? " justify-center  border border-gray-600 bg-gray-900 p-5 shadow-md rounded-md "
+                : ""
+            }`}
+          >
+            {isOpen && (
+              <button
+                onClick={() => setIsOpen(false)}
+                className="mr-3 text-gray-400 hover:text-gray-600 focus:outline-none"
+              >
+                <span className="text-3xl text-white mt-3">&times;</span>
+              </button>
+            )}
+
+            {links.map((ele, index) => (
+              <Link
+                href={ele.link}
+                key={index}
+                className="flex gap-2 items-center p-2 text-gray-400 hover:bg-slate-500/10 hover:text-white"
+                onClick={() => setIsOpen(false)}
+              >
+                <b className={`${ele.iconbg} ${ele.iconColor} p-2 rounded-md`}>
+                  {" "}
+                  {ele.icon}{" "}
+                </b>
+                <span> {ele.name} </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </nav>
+    </header>
+  );
 }
 
-export default Header
+export default Header;

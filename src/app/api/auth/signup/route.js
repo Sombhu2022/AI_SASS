@@ -78,7 +78,7 @@ export const POST = async(req)=>{
         ]
 
         // create response 
-        return ApiResponse.send('registration successfull' , {data:user} ,200 , cookies)
+        return ApiResponse.send('registration successfull' , {user} ,200 , cookies)
     
    
 
