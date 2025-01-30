@@ -23,6 +23,9 @@ function MessageAlert() {
     });
 
     return ()=>{
+      
+      setCustomColor("text-green-600");
+      setCustomBgColor("bg-green-500 hover:bg-green-700");
       Notify.unsubscribe();
     }
   }, []);

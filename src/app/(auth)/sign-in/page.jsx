@@ -33,9 +33,12 @@ export default function Page() {
       return;
     }
 
+
     dispatch(LoginUser({authId:emailOrUserName , password}))
   };
 
+
+   
 
   useEffect(()=>{
 
@@ -48,11 +51,20 @@ export default function Page() {
           setRemainingTime(Math.floor((expireTime - Date.now()) / 1000)); // Convert to seconds
       } else if (status.loginUser === 'success') {
         console.log("success");
+
         router.push('/dashboard');
       
     }else if(status.loginUser === 'rejected'){
        Notify.error(message)
        setError(message)
+
+        router.push('/');
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || "Login failed");
+      console.log(err);
+    } finally {
+      setLoading(false);
     }
 
     return()=>{
