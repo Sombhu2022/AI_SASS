@@ -62,7 +62,7 @@ export const POST = async (req) => {
        }
     ]
 
-    return ApiResponse.send("User login successfully", { isTwoStepAuth: false  }, 200 , cookie);
+    return ApiResponse.send("User login successfully", { user , isTwoStepAuth: false  }, 200 , cookie);
 
   } catch (error) {
     console.error(error);

@@ -1,6 +1,7 @@
 "use client";
 import CustomTextEditor from "@/components/CustomTextEditor";
 import Loader from "@/components/Loader";
+import { genarateAiResponse } from "@/controller/convertion.controller";
 import Notify from "@/utils/NotificationManager";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
@@ -59,25 +60,25 @@ function PdfContainer() {
       e.preventDefault();
       let updatePrompt = [fileContent]
       updatePrompt = [...updatePrompt , `${prompt} add this functionality in this existing project ,,, but if indivisual qustion , then give proper indivisual answar with keypoints and refarance link`]
-      try {
+      
         if (updatePrompt && prompt) {
           setLoading(true);
-          const { data } = await axios.post("/api/ai/convertion", {
-            prompt: prompt,
+          const { data , error } = await genarateAiResponse({
+            prompt: prompt
           });
-          const res = data?.data.data;
-          if (res) {
-            setFileContent(fileContent + res);
+          if(data){
+            const res = data?.data.data;
+            if (res) {
+              setFileContent(fileContent + res);
+            }
+
+          }else if(error){
+            Notify.error(error.status == 500?'Network Error ! , Check Your Internet Connection... ':error?.response?.data?.message);  
+              
           }
+          setLoading(false)
         }
-      } catch (error) {
-        console.log(error);
-        setLoading(false);
-        Notify.error(error.status == 500?'Network Error ! , Check Your Internet Connection... ':error?.response?.data?.message);  
-       
-      } finally{
-        setLoading(false)
-      }
+
   }
 
   return (

@@ -1,20 +1,24 @@
 "use client"
 import SpinnerLoader from '@/components/SpinnerLoader';
+import { verifyTwoStepAuthOTP } from '@/store/user/userController';
 import axios from 'axios';
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 
 function OtpVerificationSection({timer , authId }) {
 
   const [otp, setOtp] = useState(""); // For OTP verification
   const [remainingTime, setRemainingTime] = useState(timer); // Default 5 minutes in seconds
   const [error, setError] = useState("");
-  const [loading , setLoading ] = useState(false)
+  
 
   
   const router = useRouter()
+  const dispatch = useDispatch()
+  const { user , loading , message , status } = useSelector((state)=> state.user)
     
-    const handleResetOtp = async () => {
+    const handleResendOtp = async () => {
         try {
           setError("")
           const response = await axios.post("/api/auth/send-otp", {
@@ -46,26 +50,14 @@ function OtpVerificationSection({timer , authId }) {
           return;
         }
     
-        try {
-          setLoading(true)
-          const response = await axios.post("/api/auth/verify-otp", {
-            authId,
-            otp,
-          });
-    
-          if (response.data.success) {
-            router.push("/dashboard"); // Redirect to dashboard upon successful OTP verification
-          } else {
-            setError("Invalid OTP");
-          }
-        } catch (err) {
-          setError(err.response?.data?.message || "OTP verification failed");
-          console.log(err);
-        }
-        finally{
-          setLoading(false)
-        }
+       dispatch(verifyTwoStepAuthOTP({authId , otp}))
+          
       };
+
+      useEffect(()=>{
+          if(status.verifyOTP === 'success') router.back()
+          if(status.verifyOTP === 'rejected') setError(message)
+      },[status])
 
 
        // Timer effect for OTP
@@ -110,7 +102,7 @@ function OtpVerificationSection({timer , authId }) {
         <div className="flex justify-between">
           <p className="text-red-500">OTP expired!</p>
           <p
-            onClick={handleResetOtp}
+            onClick={handleResendOtp}
             className=" text-blue-600 bg-none cursor-pointer"
           >
             {" "}
@@ -125,7 +117,7 @@ function OtpVerificationSection({timer , authId }) {
       className="w-full custom-button"
       disabled={remainingTime <= 0}
     >
-      {loading?(<div className='flex justify-center items-center gap-3'>Loading...<SpinnerLoader/></div>):'Verify OTP'}
+      {loading.verifyOTPLoading?(<div className='flex justify-center items-center gap-3'>Loading...<SpinnerLoader/></div>):'Verify OTP'}
     </button>
   </form>
   )

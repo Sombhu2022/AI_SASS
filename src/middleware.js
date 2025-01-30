@@ -44,8 +44,8 @@ export const config = {
         '/sign-up', 
         '/profile',  
         '/dashboard',  
-        '/ai/:path*',
-        '/ai/convertion/:path*', 
+        // '/ai/:path*',
+        // '/ai/convertion/:path*', 
         '/setting'
     ],
 };

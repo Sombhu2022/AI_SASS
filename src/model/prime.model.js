@@ -2,6 +2,16 @@ import mongoose, { model, models, Schema } from "mongoose"
 
 
 const offerShema = new Schema({
+    req:{
+        exist:{
+            type:Number,
+            default:20
+        },
+        capacity:{
+            type:Number,
+            default:20
+        }
+    },
     pdf:{
         exist:{
             type:Number,

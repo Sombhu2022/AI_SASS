@@ -10,6 +10,7 @@ import axios from "axios";
 import MyEditor from "@/components/MyEditor";
 // import CustomTextEditor from "@/components/CustomTextEditor";
 import Notify from "@/utils/NotificationManager";
+import { genarateAiResponse } from "@/controller/convertion.controller";
 
 const CustomTextEditor = React.lazy(()=> import('@/components/CustomTextEditor'))
 
@@ -41,33 +42,30 @@ function Page() {
   const handleSubmit = async (prompt) => {
     console.log(prompt);
     const updatePrompt = [...content?.aiPrompt, prompt];
-    // console.log(updatePrompt);
     
-
-    try {
       if (updatePrompt && prompt) {
         setLoading(true);
-        const { data } = await axios.post("/api/ai/convertion", {
-          prompt: updatePrompt,
-        });
+        const { data , error } = await genarateAiResponse({
+          prompt: updatePrompt, type:'pdf'
+        }) 
 
-        // Update messages directly
-        const res = data?.data.data;
-        // console.log(res);
-        
-        if (res) {
-          setResponse(response + res);
+        if(data){
+          // Update messages directly
+          const res = data?.data.data;
+          // console.log(res);
+          if (res) {
+            setResponse(response + res);
+          }
+
+        } else if(error){
+          console.error(error)
+          Notify.error(error.status == 500?'Network Error ! , Check Your Internet Connection... ':error?.response?.data?.message);  
+
         }
-
         // Clear prompt after submission
         setLoading(false);
-      }
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
-      Notify.error(error.status == 500?'Network Error ! , Check Your Internet Connection... ':error?.response?.data?.message);  
-     
-    }
+      } 
+    
   };
 
   return (
