@@ -42,6 +42,8 @@ export default function Page() {
 
   useEffect(()=>{
 
+    try{
+
         if (status.loginUser === 'success' && isTwoStepAuth) {
         
         setAuthId(emailOrUserName); // Store the authId for OTP submission

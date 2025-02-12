@@ -13,7 +13,7 @@ function AllPdfTable({ files = [] }) {
   
   const itemsPerPage = 5;
 
-  console.log("all pdf files", allPdfFiles);
+  // console.log("all pdf files", allPdfFiles);
 
   useEffect(() => {
     if (files.length > 0) {

@@ -57,7 +57,7 @@ export const POST = async (req) => {
     // Set token as a cookie and send success response
     const cookie = [
        {
-        name:'token',
+        name:'token' , 
         value:token
        }
     ]
