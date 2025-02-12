@@ -16,14 +16,14 @@ export default function Page() {
   const [emailOrUserName, setEmailOrUserName] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
- 
+
   const [authId, setAuthId] = useState(""); // For storing authId after login
   const [remainingTime, setRemainingTime] = useState(300); // Default 5 minutes in seconds
 
- 
-
-  const dispatch = useDispatch()
-  const { user , loading , message , status , isTwoStepAuth } = useSelector((state)=> state.user)
+  const dispatch = useDispatch();
+  const { user, loading, message, status, isTwoStepAuth } = useSelector(
+    (state) => state.user
+  );
 
   const handleSignIn = async (e) => {
     e.preventDefault();
@@ -33,50 +33,32 @@ export default function Page() {
       return;
     }
 
-
-    dispatch(LoginUser({authId:emailOrUserName , password}))
+    dispatch(LoginUser({ authId: emailOrUserName, password }));
   };
 
+  useEffect(() => {
+    if (status.loginUser === "success" && isTwoStepAuth) {
+      setAuthId(emailOrUserName); // Store the authId for OTP submission
 
-   
+      const expireTime = user.otpExpireTime || Date.now() + 5 * 60 * 1000; // 5 minutes from now
+      setRemainingTime(Math.floor((expireTime - Date.now()) / 1000)); // Convert to seconds
+    } else if (status.loginUser === "success") {
+      console.log("success");
 
-  useEffect(()=>{
+      router.push("/dashboard");
+    } else if (status.loginUser === "rejected") {
+      Notify.error(message);
+      setError(message);
 
-    try{
-
-        if (status.loginUser === 'success' && isTwoStepAuth) {
-        
-        setAuthId(emailOrUserName); // Store the authId for OTP submission
-
-        const expireTime =
-          user.otpExpireTime || Date.now() + 5 * 60 * 1000; // 5 minutes from now
-          setRemainingTime(Math.floor((expireTime - Date.now()) / 1000)); // Convert to seconds
-      } else if (status.loginUser === 'success') {
-        console.log("success");
-
-        router.push('/dashboard');
-      
-    }else if(status.loginUser === 'rejected'){
-       Notify.error(message)
-       setError(message)
-
-        router.push('/');
-      }
-    } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
-      console.log(err);
-    } finally {
-      setLoading(false);
+      router.push("/");
     }
 
-    return()=>{
-      dispatch(resetState())
-    }
-  },[status , user])
+    return () => {
+      dispatch(resetState());
+    };
+  }, [status, user]);
 
-  useEffect(()=>{
-
-  },[])
+  useEffect(() => {}, []);
 
   const handleClose = () => {
     router.back();
