@@ -9,18 +9,18 @@ export async function middleware(request) {
     // Get the token from cookies
     const token = request.cookies.get('token')?.value ;
     
-    console.log('token' , token? true:false);
+    // console.log('token' , token? true:false);
     
 
      // Allow access to the /ai/convertion page regardless of token presence
      if (request.nextUrl.pathname === '/ai/convertion') {
-        console.info('ai/convertion path select')
+        // console.info('ai/convertion path select')
         return NextResponse.next();
     }
 
     // If the user is authenticated and tries to access public paths (like sign-in or sign-up), redirect them to the home page
     if (token && isPublicPath) {
-        console.log('token and public url here');
+        // console.log('token and public url here');
         
         return NextResponse.redirect(new URL('/', request.nextUrl));
     }
@@ -44,8 +44,8 @@ export const config = {
         '/sign-up', 
         '/profile',  
         '/dashboard',  
-        // '/ai/:path*',
-        // '/ai/convertion/:path*', 
+        '/ai/:path*',
+        '/ai/convertion/:path*', 
         '/setting'
     ],
 };

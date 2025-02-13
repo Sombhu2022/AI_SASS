@@ -125,7 +125,7 @@ export const POST = async (req) => {
 
       // Convert image data to base64 string
       // const imageData = `data:${inlineData.mimeType};base64,${Buffer.from(inlineData.data).toString("base64")}`;
-      console.log("---------------------------------------->" , inlineData);
+      // console.log("---------------------------------------->" , inlineData);
       
 
       // Send image + prompt to API
